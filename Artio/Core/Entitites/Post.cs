@@ -14,7 +14,7 @@ namespace Core.Entitites
 
         public string Description { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public string UserId { get; set; }
 
