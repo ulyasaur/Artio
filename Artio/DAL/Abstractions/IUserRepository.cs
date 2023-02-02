@@ -30,9 +30,5 @@ namespace DAL.Abstractions
         Task AddTagToUserAsync(string userId, int tagId);
 
         Task DeleteTagFromUserAsync(string userId, int tagId);
-
-        Task AddPostToUserAsync(string userId, int postId);
-
-        Task DeletePostFromUserAsync(string userId, int postId);
     }
 }
