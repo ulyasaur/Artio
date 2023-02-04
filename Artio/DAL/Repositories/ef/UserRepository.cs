@@ -107,8 +107,11 @@ namespace DAL.Repositories.ef
                 return await this._context.Users
                     .Include(u => u.Posts)
                     .Include(u => u.UserTags)
+                        .ThenInclude(t => t.Tag)
                     .Include(u => u.Followers)
+                        .ThenInclude(o => o.Observer)
                     .Include(u => u.Followings)
+                        .ThenInclude(t => t.Target)
                     .Where(filter)
                     .ToListAsync();
             }
@@ -157,7 +160,15 @@ namespace DAL.Repositories.ef
         {
             try
             {
-                return await this._context.Users.SingleAsync(filter);
+                return await this._context.Users
+                    .Include(u => u.Posts)
+                    .Include(u => u.UserTags)
+                        .ThenInclude(t => t.Tag)
+                    .Include(u => u.Followers)
+                        .ThenInclude(o => o.Observer)
+                    .Include(u => u.Followings)
+                        .ThenInclude(t => t.Target)
+                    .SingleAsync(filter);
             }
             catch (Exception ex)
             {

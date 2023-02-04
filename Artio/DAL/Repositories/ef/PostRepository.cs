@@ -92,6 +92,7 @@ namespace DAL.Repositories.ef
             {
                 return await this._context.Posts
                     .Include(p => p.PostTags)
+                        .ThenInclude(t => t.Tag)
                     .Include(p => p.User)
                     .Include(p => p.Comments)
                     .Include(p => p.Likes)
@@ -109,7 +110,13 @@ namespace DAL.Repositories.ef
         {
             try
             {
-                return await this._context.Posts.SingleAsync(filter);
+                return await this._context.Posts
+                    .Include(p => p.PostTags)
+                        .ThenInclude(t => t.Tag)
+                    .Include(p => p.User)
+                    .Include(p => p.Comments)
+                    .Include(p => p.Likes)
+                    .SingleAsync(filter);
             }
             catch (Exception ex)
             {
