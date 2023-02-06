@@ -4,30 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace DAL.Abstractions
+namespace BLL.Abstractions
 {
-    public interface IUserRepository
+    public interface IUserService
     {
-        Task<List<User>> GetAllUsersAsync(Expression<Func<User, bool>> filter);
-
         Task<List<User>> GetFollowersAsync(string targetId);
 
         Task<List<User>> GetFollowingsAsync(string observerId);
 
-        Task<User> GetUserAsync(Expression<Func<User, bool>> filter);
-
-        Task<UserFollowing> GetUserFollowing(string observerId, string targetId);
+        Task<User> GetUserByIdAsync(string userId);
 
         Task UpdateUserAsync(User user);
 
         Task DeleteUserAsync(string userId);
 
-        Task AddUserFollowingAsync(string observerId, string targetId);
-
-        Task DeleteUserFollowingAsync(string observerId, string targetId);
+        Task ToggleFollowAsync(string observerId, string targetId);
 
         Task AddTagToUserAsync(string userId, int tagId);
 

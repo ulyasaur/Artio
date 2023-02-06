@@ -65,5 +65,18 @@ namespace DAL.Repositories.ef
                 throw;
             }
         }
+
+        public async Task<Like> GetLike(Expression<Func<Like, bool>> filter)
+        {
+            try
+            {
+                return await this._context.Likes.FirstOrDefaultAsync(filter);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace DAL.Abstractions
     {
         Task<List<Like>> GetAllLikes(Expression<Func<Like, bool>> filter);
 
+        Task<Like> GetLike(Expression<Func<Like, bool>> filter);
+
         Task AddLike(Like like);
 
         Task DeleteLike(string userId, int postId);
