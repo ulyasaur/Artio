@@ -177,6 +177,22 @@ namespace DAL.Repositories.ef
             }
         }
 
+        public async Task<UserFollowing> GetUserFollowing(string observerId, string targetId)
+        {
+            try
+            {
+                return await this._context.UserFollowings
+                    .Include(t => t.Target)
+                    .Include (o => o.ObserverId)
+                    .FirstOrDefaultAsync(u => u.ObserverId.Equals(observerId) && u.TargetId.Equals(targetId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
         public async Task UpdateUserAsync(User user)
         {
             try

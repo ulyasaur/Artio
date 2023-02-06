@@ -39,6 +39,11 @@ namespace DAL.Repositories.ef
 
         public async Task DeleteComment(int commentId)
         {
+            if (commentId <= 0)
+            {
+                throw new ArgumentNullException("Comment id must be greater than 0");
+            }
+
             try
             {
                 Comment? comment = await this._context.Comments.SingleAsync(c => c.CommentId == commentId);
@@ -58,6 +63,19 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.Comments.Include(c => c.User).Where(filter).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<Comment> GetComment(Expression<Func<Comment, bool>> filter)
+        {
+            try
+            {
+                return await this._context.Comments.Include(c => c.User).SingleAsync(filter);
             }
             catch (Exception ex)
             {

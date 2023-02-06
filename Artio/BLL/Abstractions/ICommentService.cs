@@ -6,13 +6,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Abstractions
+namespace BLL.Abstractions
 {
-    public interface ICommentRepository
+    public interface ICommentService
     {
-        Task<List<Comment>> GetAllComments(Expression<Func<Comment, bool>> filter);
-
-        Task<Comment> GetComment(Expression<Func<Comment, bool>> filter);
+        Task<List<Comment>> GetCommentsForPost(int postId);
 
         Task AddComment(Comment comment);
 
