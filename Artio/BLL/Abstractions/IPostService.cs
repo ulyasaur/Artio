@@ -1,4 +1,5 @@
-﻿using Core.Entitites;
+﻿using BLL.Dtos;
+using Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace BLL.Abstractions
 
         Task<Post> GetPostByIdAsync(int postId);
 
-        Task AddPostAsync(Post post);
+        Task AddPostAsync(PostDto postDto);
 
-        Task UpdatePostAsync(Post post);
+        Task UpdatePostAsync(PostDto postDto);
 
         Task DeletePostAsync(int postId);
 
