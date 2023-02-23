@@ -70,12 +70,33 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUser(string userId)
+        [HttpGet("id/{userId}")]
+        public async Task<IActionResult> GetUserById(string userId)
         {
             try
             {
                 User user = await this._userService.GetUserByIdAsync(userId);
+
+                UserProfileViewModel profile = new UserProfileViewModel();
+
+                this._mapper.Map(user, profile);
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            try
+            {
+                User user = await this._userService.GetUserByUsernameAsync(username);
 
                 UserProfileViewModel profile = new UserProfileViewModel();
 

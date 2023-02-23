@@ -11,20 +11,22 @@ namespace Core.Entitites
     {
         public string DisplayName { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
-        public string Bio { get; set; }
+        public string? BackgroundUrl { get; set; }
 
-        public List<Post> Posts { get; set; }
+        public string? Bio { get; set; }
 
-        public List<Like> Likes { get; set; }
+        public List<Post> Posts { get; set; } = new List<Post>();
 
-        public List<UserTag> UserTags { get; set; }
+        public List<Like> Likes { get; set; } = new List<Like>();
 
-        public List<Comment> Comments { get; set; }
+        public List<UserTag> UserTags { get; set; } = new List<UserTag>();
 
-        public List<UserFollowing> Followings { get; set; }
+        public List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public List<UserFollowing> Followers { get; set; }
+        public List<UserFollowing> Followings { get; set; } = new List<UserFollowing>();
+
+        public List<UserFollowing> Followers { get; set; } = new List<UserFollowing>();
     }
 }

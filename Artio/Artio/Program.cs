@@ -1,7 +1,8 @@
+using Artio.Services;
+using Artio.Services.Abstractions;
 using BLL.Abstractions;
 using BLL.Services;
 using Core.Entitites;
-using Core.Mapping;
 using DAL;
 using DAL.Abstractions;
 using DAL.Repositories.ef;
@@ -23,7 +24,9 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(
                     appConfig.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddAutoMapper(typeof(Core.Mapping.MappingProfiles).Assembly);
+builder.Services.AddAutoMapper(typeof(BLL.Mapping.MappingProfiles).Assembly);
+builder.Services.AddAutoMapper(typeof(Artio.Mapping.MappingProfiles).Assembly);
 
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
@@ -32,6 +35,7 @@ builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
@@ -46,6 +50,18 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:3000");
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -77,6 +93,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

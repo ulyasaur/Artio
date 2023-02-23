@@ -32,7 +32,7 @@ namespace BLL.Services
 
         public async Task AddTagToUserAsync(string userId, int tagId)
         {
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException("User id must not be null");
             }
@@ -58,7 +58,7 @@ namespace BLL.Services
 
         public async Task DeleteTagFromUserAsync(string userId, int tagId)
         {
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException("User id must not be null");
             }
@@ -84,7 +84,7 @@ namespace BLL.Services
 
         public async Task DeleteUserAsync(string userId)
         {
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException("User id must not be null");
             }
@@ -103,7 +103,7 @@ namespace BLL.Services
 
         public async Task<List<User>> GetFollowersAsync(string targetId)
         {
-            if (!string.IsNullOrEmpty(targetId))
+            if (string.IsNullOrEmpty(targetId))
             {
                 throw new ArgumentNullException("Target id must not be null");
             }
@@ -126,7 +126,7 @@ namespace BLL.Services
 
         public async Task<List<User>> GetFollowingsAsync(string observerId)
         {
-            if (!string.IsNullOrEmpty(observerId))
+            if (string.IsNullOrEmpty(observerId))
             {
                 throw new ArgumentNullException("Observer id must not be null");
             }
@@ -149,7 +149,7 @@ namespace BLL.Services
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            if (!string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException("User id must not be null");
             }
@@ -168,14 +168,35 @@ namespace BLL.Services
             return user;
         }
 
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentNullException("Username must not be null");
+            }
+
+            User user = null;
+
+            try
+            {
+                user = await this._userRepository.GetUserAsync(x => username.Equals(x.UserName));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return user;
+        }
+
         public async Task ToggleFollowAsync(string observerId, string targetId)
         {
-            if (!string.IsNullOrEmpty(targetId))
+            if (string.IsNullOrEmpty(targetId))
             {
                 throw new ArgumentNullException("Target id must not be null");
             }
 
-            if (!string.IsNullOrEmpty(observerId))
+            if (string.IsNullOrEmpty(observerId))
             {
                 throw new ArgumentNullException("Observer id must not be null");
             }
@@ -205,12 +226,12 @@ namespace BLL.Services
 
         public async Task UpdateUserAsync(User user)
         {
-            if (!string.IsNullOrEmpty(user.Id))
+            if (string.IsNullOrEmpty(user.Id))
             {
                 throw new ArgumentNullException("User id must not be null");
             }
 
-            if (this._validator.Validate(user))
+            if (!this._validator.Validate(user))
             {
                 throw new ArgumentException("User is not valid");
             }

@@ -6,6 +6,8 @@
 
         public string ImageUrl { get; set; }
 
+        public string BackgroundUrl { get; set; }
+
         public string Bio { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Core.Entitites
 
         public string ImageUrl { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
 
@@ -20,11 +20,11 @@ namespace Core.Entitites
 
         public User User { get; set; }
 
-        public List<PostTag> PostTags { get; set; }
+        public List<PostTag> PostTags { get; set; } = new List<PostTag>();
 
-        public List<Comment> Comments { get; set; }
+        public List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public List<Like> Likes { get; set; }
+        public List<Like> Likes { get; set; } = new List<Like>();
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entitites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace BLL.Abstractions
     {
         Task<string> LoginAsync(string username, string password);
 
-        Task<bool> RegistrateAsync(string username, string password);
+        Task<bool> RegistrateAsync(User user, string password);
     }
 }
