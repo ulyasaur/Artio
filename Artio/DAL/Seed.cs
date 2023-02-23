@@ -17,33 +17,6 @@ namespace DAL
                 && !context.Posts.Any()
                 && !context.Tags.Any())
             {
-                var users = new List<User>
-                {
-                    new User
-                    {
-                        DisplayName = "Bob",
-                        UserName = "bob",
-                        Email = "bob@test.com"
-                    },
-                    new User
-                    {
-                        DisplayName = "Jane",
-                        UserName = "jane",
-                        Email = "jane@test.com"
-                    },
-                    new User
-                    {
-                        DisplayName = "Tom",
-                        UserName = "tom",
-                        Email = "tom@test.com"
-                    },
-                };
-
-                foreach (var user in users)
-                {
-                    await userManager.CreateAsync(user, "Pa$$w0rd");
-                }
-
                 var tags = new List<Tag>
                 {
                     new Tag
@@ -74,12 +47,57 @@ namespace DAL
 
                 await context.Tags.AddRangeAsync(tags);
 
+                var users = new List<User>
+                {
+                    new User
+                    {
+                        DisplayName = "Bob",
+                        UserName = "bob",
+                        Email = "bob@test.com",
+                        UserTags = new List<UserTag>
+                        {
+                            new UserTag
+                            {
+                                Tag = tags[0]
+                            },
+                            new UserTag
+                            {
+                                Tag = tags[1]
+                            },
+                            new UserTag
+                            {
+                                Tag = tags[3]
+                            }
+                        }
+                    },
+                    new User
+                    {
+                        DisplayName = "Jane",
+                        UserName = "jane",
+                        Email = "jane@test.com"
+                    },
+                    new User
+                    {
+                        DisplayName = "Tom",
+                        UserName = "tom",
+                        Email = "tom@test.com"
+                    },
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
+
+                
+
                 var posts = new List<Post>
                 {
                     new Post
                     {
+                        ImageUrl = "",
                         Description = "very interesting description",
-                        CreatedAt = DateTimeOffset.Now.AddDays(-3),
+                        CreatedAt = DateTimeOffset.UtcNow.AddDays(-3),
                         User = users[0],   
                         PostTags = new List<PostTag>
                         {
@@ -95,8 +113,9 @@ namespace DAL
                     },
                     new Post
                     {
+                        ImageUrl = "",
                         Description = "not very interesting description",
-                        CreatedAt = DateTimeOffset.Now.AddDays(-8),
+                        CreatedAt = DateTimeOffset.UtcNow.AddDays(-8),
                         User = users[0],   
                         PostTags = new List<PostTag>
                         {
@@ -116,8 +135,9 @@ namespace DAL
                     },
                     new Post
                     {
+                        ImageUrl = "",
                         Description = "yipeeee",
-                        CreatedAt = DateTimeOffset.Now.AddDays(-20),
+                        CreatedAt = DateTimeOffset.UtcNow.AddDays(-20),
                         User = users[0],   
                         PostTags = new List<PostTag>
                         {
@@ -128,6 +148,10 @@ namespace DAL
                         }
                     }
                 };
+
+                await context.Posts.AddRangeAsync(posts);
+
+                await context.SaveChangesAsync();
             }
         }
     }

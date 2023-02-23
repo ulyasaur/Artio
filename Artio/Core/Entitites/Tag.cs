@@ -12,8 +12,8 @@ namespace Core.Entitites
 
         public string TagName { get; set; }
 
-        public List<UserTag> UserTags { get; set; }
+        public List<UserTag> UserTags { get; set; } = new List<UserTag>();
 
-        public List<PostTag> PostTags { get; set; }
+        public List<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }

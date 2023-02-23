@@ -41,12 +41,15 @@ namespace Artio.Mapping
             CreateMap<Tag, TagViewModel>();
 
             CreateMap<User, UserProfileViewModel>()
+                .ForMember(d => d.Tags, o => o.MapFrom(s => s.UserTags.Select(x => x.Tag)))
                 .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count))
                 .ForMember(d => d.FollowingsCount, o => o.MapFrom(s => s.Followings.Count));
 
             CreateMap<User, UserUpdateViewModel>();
 
             CreateMap<User, UserViewModel>();
+
+            CreateMap<User, RegisterViewModel>();
         }
     }
 }

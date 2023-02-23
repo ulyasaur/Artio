@@ -1,5 +1,7 @@
 ﻿using Artio.ViewModels;
+using AutoMapper;
 using BLL.Abstractions;
+using Core.Entitites;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +13,12 @@ namespace Artio.Controllers
     {
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        private readonly IMapper _mapper;
+
+        public AccountController(IAccountService accountService, IMapper mapper)
         {
             _accountService = accountService;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -34,7 +39,11 @@ namespace Artio.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (await _accountService.RegistrateAsync(model.Username, model.Password))
+            User user = new User();
+
+            this._mapper.Map(model, user);
+
+            if (await _accountService.RegistrateAsync(user, model.Password))
             {
                 return Ok();
             }

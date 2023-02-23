@@ -2,13 +2,15 @@
 {
     public class UserProfileViewModel
     {
-        public string UserId { get; set; }
+        public string Id { get; set; }
 
         public string Username { get; set; }
 
         public string DisplayName { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public string BackgroundUrl { get; set; }
 
         public string Bio { get; set; }
 

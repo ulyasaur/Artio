@@ -16,6 +16,8 @@ namespace BLL.Abstractions
 
         Task<User> GetUserByIdAsync(string userId);
 
+        Task<User> GetUserByUsernameAsync(string username);
+
         Task UpdateUserAsync(User user);
 
         Task DeleteUserAsync(string userId);

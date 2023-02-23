@@ -96,7 +96,7 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpGet("{postId}")]
+        [HttpGet("post/{postId}")]
         public async Task<IActionResult> GetPost(int postId)
         {
             try
@@ -129,7 +129,7 @@ namespace Artio.Controllers
                 post.UserId = this._userAccessor.GetUserId();
                 post.CreatedAt = DateTimeOffset.UtcNow;
 
-                await this._postService.AddPostAsync(post, postCreateViewModel.Tags);
+                await this._postService.AddPostAsync(post);
 
                 return Ok();
             }
@@ -151,7 +151,7 @@ namespace Artio.Controllers
                 this._mapper.Map(postCreateViewModel, post);
                 post.PostId = postId;
 
-                await this._postService.UpdatePostAsync(post, postCreateViewModel.Tags);
+                await this._postService.UpdatePostAsync(post);
 
                 return Ok();
             }

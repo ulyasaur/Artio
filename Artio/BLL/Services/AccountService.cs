@@ -54,14 +54,9 @@ namespace BLL.Services
             throw new InvalidOperationException("Incorrect password");
         }
 
-        public async Task<bool> RegistrateAsync(string username, string password)
+        public async Task<bool> RegistrateAsync(User user, string password)
         {
-            User user = new User
-            {
-                UserName = username
-            };
-
-            if (await IsThereSuchLoginAsync(username))
+            if (await IsThereSuchLoginAsync(user.UserName))
             {
                 _logger.LogError("Validation exception user with such login already exists");
                 return false;
