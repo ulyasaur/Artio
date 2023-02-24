@@ -1,0 +1,82 @@
+import { makeAutoObservable, reaction, runInAction } from "mobx";
+import agent from "../api/agent";
+import { Auth } from "../models/auth";
+import { User } from "../models/user";
+import { router } from "../router/router";
+
+export default class UserStore {
+    currentUser: User | null = null;
+    token: string | null = localStorage.getItem("jwt");
+
+    constructor() {
+        makeAutoObservable(this);
+
+        reaction(
+            () => this.token,
+            token => {
+                if(token) {
+                    localStorage.setItem("jwt", token);
+                } else {
+                    localStorage.removeItem("jwt");
+                }
+            }
+        );
+    }
+
+    get isLoggedIn() {
+        return !!this.currentUser;
+    }
+
+    setToken = (token: string | null) => {
+        this.token = token;
+    }
+
+    login = async (creds: Auth) => {
+        try {
+            const authResponse = await agent.Account.login(creds);
+            this.setToken(authResponse.token);
+            runInAction(() => this.currentUser = authResponse.user);
+            router.navigate("/");
+            //store.modalStore.closeModal();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    register = async (creds: Auth) => {
+        try {
+            await agent.Account.register(creds);
+            router.navigate("/");
+            //store.modalStore.closeModal();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    logout = () => {
+        this.setToken(null);
+        this.currentUser = null;
+        router.navigate("/");
+    }
+
+    // getUser = async () => {
+    //     try {
+    //         const user = await agent.Account.current();
+    //         runInAction(() => this.user = user);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+    // setImage = (image: string) => {
+    //     if (this.user) {
+    //         this.user.image = image;
+    //     }
+    // }
+
+    // setDisplayName = (displayName: string) => {
+    //     if (this.user) {
+    //         this.user.displayName = displayName;
+    //     }
+    // }
+}

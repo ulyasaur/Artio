@@ -13,11 +13,14 @@ namespace Artio.Controllers
     {
         private readonly IAccountService _accountService;
 
+        private readonly IUserService _userService;
+
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, IMapper mapper)
+        public AccountController(IAccountService accountService, IUserService userService, IMapper mapper)
         {
             _accountService = accountService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -28,7 +31,14 @@ namespace Artio.Controllers
             {
                 var token = await _accountService.LoginAsync(user.Username, user.Password);
 
-                return Ok(token.Replace("\"", string.Empty));
+                User userInfo = await this._userService.GetUserByUsernameAsync(user.Username);
+
+                AuthResponseViewModel authResponse = new AuthResponseViewModel();
+                authResponse.Token = token.Replace("\"", string.Empty);
+                authResponse.User = new UserViewModel();
+                this._mapper.Map(userInfo, authResponse.User);
+
+                return Ok(authResponse);
             }
             catch (InvalidOperationException ex)
             {
