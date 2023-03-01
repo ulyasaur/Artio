@@ -36,8 +36,7 @@ export default class UserStore {
             const authResponse = await agent.Account.login(creds);
             this.setToken(authResponse.token);
             runInAction(() => this.currentUser = authResponse.user);
-            router.navigate("/");
-            //store.modalStore.closeModal();
+            router.navigate(`/profile/${this.currentUser?.username}`);
         } catch (error) {
             throw error;
         }
@@ -58,15 +57,6 @@ export default class UserStore {
         this.currentUser = null;
         router.navigate("/");
     }
-
-    // getUser = async () => {
-    //     try {
-    //         const user = await agent.Account.current();
-    //         runInAction(() => this.user = user);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
 
     // setImage = (image: string) => {
     //     if (this.user) {

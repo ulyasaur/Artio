@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, IconButton, Tooltip } from "@mui/materia
 import { Post } from "../../app/models/post";
 import placeholder from "../../assets/placeholder.png";
 import AddIcon from '@mui/icons-material/Add';
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "../../app/common/themes/theme";
 
 interface Props {
     posts: Post[];
@@ -12,7 +14,7 @@ interface Props {
 export default observer(function ProfilePosts({ posts }: Props) {
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Card sx={{
                 margin: "auto",
                 width: "75vw"
@@ -62,6 +64,6 @@ export default observer(function ProfilePosts({ posts }: Props) {
                     </Masonry>
                 </CardContent>
             </Card>
-        </>
+        </ThemeProvider>
     );
 })

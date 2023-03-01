@@ -1,7 +1,6 @@
 export interface Auth {
     username: string;
-    email: string;
-    displayName: string;
+    email?: string;
+    displayName?: string;
     password: string;
-    passwordConfirm: string;
 }
