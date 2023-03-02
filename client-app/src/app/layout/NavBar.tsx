@@ -1,4 +1,4 @@
-import { alpha, AppBar, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputBase, ListItemIcon, Menu, MenuItem, styled, Toolbar, Tooltip, Typography } from '@mui/material';
+import { alpha, AppBar, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputBase, Link, ListItemIcon, Menu, MenuItem, styled, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,6 +9,7 @@ import { Logout, Settings } from '@mui/icons-material';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../common/themes/theme';
 import { observer } from 'mobx-react-lite';
+import { Link as RouterLink } from "react-router-dom";
 
 function NavBar() {
   const { userStore: { currentUser, logout } } = useStore();
@@ -81,23 +82,24 @@ function NavBar() {
             >
               <img alt="artio" height={27} width={27} src={logo} />
             </Icon>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              ARTIO
-            </Typography>
+            <Link component={RouterLink} to="/">
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: 'white',
+                  textDecoration: 'none',
+                }}
+              >
+                ARTIO
+              </Typography>
+            </Link>
+
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button
@@ -140,11 +142,18 @@ function NavBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem href={`profile/${currentUser?.username}`} onClick={handleCloseUserMenu}>
+                <MenuItem onClick={handleCloseUserMenu}>
                   <ListItemIcon>
                     <PersonIcon fontSize="small" />
                   </ListItemIcon>
-                  Profile
+                  <Link
+                    style={{
+                      color: "black",
+                      textDecoration: "none"
+                    }}
+                  component={RouterLink} to={`profile/${currentUser?.username}`}>
+                    Profile
+                  </Link>                  
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleCloseUserMenu}>

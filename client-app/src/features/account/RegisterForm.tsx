@@ -8,13 +8,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
+import { theme } from "../../app/common/themes/theme";
 import { ErrorMessage, Formik } from "formik";
 import { useStore } from "../../app/stores/store";
-import { theme } from "../../app/common/themes/theme";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
+import * as Yup from "yup";
 
-export default observer(function LoginForm() {
+export default observer(function RegisterForm() {
   const { userStore } = useStore();
 
   return (
@@ -22,9 +23,15 @@ export default observer(function LoginForm() {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Formik
-          initialValues={{ username: "", password: "", error: null }}
-          onSubmit={(values, { setErrors }) => userStore.login(values).catch(error =>
-            setErrors({ error: "Invalid email or password" }))}
+          initialValues={{ displayName: "", username: "", email: "", password: "", error: null }}
+          onSubmit={(values, { setErrors }) => userStore.register(values).then(() => window.location.reload()).catch(error =>
+            setErrors({ error }))}
+          validationSchema={Yup.object({
+            displayName: Yup.string().required(),
+            username: Yup.string().required(),
+            email: Yup.string().required(),
+            password: Yup.string().required(),
+          })}
         >
           {({ handleSubmit, isSubmitting, errors }) => (
             <form autoComplete="false" onSubmit={handleSubmit}>
@@ -40,16 +47,32 @@ export default observer(function LoginForm() {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Log in
+                  Sign up
                 </Typography>
                 <Box sx={{ mt: 3 }}>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <FormTextField
                         required
+                        label="Display name"
+                        placeholder="Display name"
+                        name="displayName"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormTextField
+                        required
                         label="Username"
                         placeholder="Username"
                         name="username"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormTextField
+                        required
+                        label="Email"
+                        placeholder="Email"
+                        name="email"
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -78,12 +101,12 @@ export default observer(function LoginForm() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    Log in
+                    Sign up
                   </LoadingButton>
                   <Grid container justifyContent="flex-end">
                     <Grid item>
                       <Link href="#" variant="body2">
-                        Don't have an account? Sign up
+                        Already have an account? Log in
                       </Link>
                     </Grid>
                   </Grid>

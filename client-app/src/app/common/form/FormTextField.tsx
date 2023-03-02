@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useField } from "formik";
 
 interface Props {
@@ -16,14 +16,11 @@ export default function FormTextField(props: Props) {
         <>
             <TextField
                 fullWidth
-                error={meta.touched} //&& meta.invalid
+                error={meta.touched && !!meta.error} //&& meta.invalid
                 helperText={meta.touched && meta.error}
                 {...field}
                 {...props}
             />
-            {meta.touched && meta.error ? (
-                <Typography color='red'>{meta.error}</Typography>
-            ) : null}
         </>
     );
 }

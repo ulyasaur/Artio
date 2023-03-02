@@ -46,7 +46,6 @@ export default class UserStore {
         try {
             await agent.Account.register(creds);
             router.navigate("/");
-            //store.modalStore.closeModal();
         } catch (error) {
             throw error;
         }
