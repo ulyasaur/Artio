@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { Link as RouterLink } from "react-router-dom";
 
 function NavBar() {
-  const { userStore: { currentUser, logout } } = useStore();
+  const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -101,80 +101,83 @@ function NavBar() {
             </Link>
 
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              <Button
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Feed
-              </Button>
-            </Box>
+            {isLoggedIn &&
+              <>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                  <Button
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    Feed
+                  </Button>
+                </Box>
 
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search for tags…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    placeholder="Search for tags…"
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </Search>
 
 
-            <Box sx={{ flexGrow: 0, padding: "2px" }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu}>
-                  <Avatar alt={currentUser?.displayName} src={currentUser?.imageUrl || userPlaceholder} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <ListItemIcon>
-                    <PersonIcon fontSize="small" />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      color: "black",
-                      textDecoration: "none"
+                <Box sx={{ flexGrow: 0, padding: "2px" }}>
+                  <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu}>
+                      <Avatar alt={currentUser?.displayName} src={currentUser?.imageUrl || userPlaceholder} />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
-                  component={RouterLink} to={`profile/${currentUser?.username}`}>
-                    Profile
-                  </Link>                  
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    logout();
-                    handleCloseUserMenu();
-                  }}
-                >
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
-              </Menu>
-            </Box>
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <ListItemIcon>
+                        <PersonIcon fontSize="small" />
+                      </ListItemIcon>
+                      <Link
+                        style={{
+                          color: "black",
+                          textDecoration: "none"
+                        }}
+                        component={RouterLink} to={`profile/${currentUser?.username}`}>
+                        Profile
+                      </Link>
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <ListItemIcon>
+                        <Settings fontSize="small" />
+                      </ListItemIcon>
+                      Settings
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        logout();
+                        handleCloseUserMenu();
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Logout fontSize="small" />
+                      </ListItemIcon>
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </Box>
+              </>}
           </Toolbar>
         </Container>
       </AppBar >

@@ -15,7 +15,11 @@ import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
 import * as Yup from "yup";
 
-export default observer(function RegisterForm() {
+interface Props {
+  setValue: any;
+}
+
+export default observer(function RegisterForm({setValue}: Props) {
   const { userStore } = useStore();
 
   return (
@@ -24,7 +28,7 @@ export default observer(function RegisterForm() {
         <CssBaseline />
         <Formik
           initialValues={{ displayName: "", username: "", email: "", password: "", error: null }}
-          onSubmit={(values, { setErrors }) => userStore.register(values).then(() => window.location.reload()).catch(error =>
+          onSubmit={(values, { setErrors }) => userStore.register(values).catch(error =>
             setErrors({ error }))}
           validationSchema={Yup.object({
             displayName: Yup.string().required(),
@@ -105,7 +109,7 @@ export default observer(function RegisterForm() {
                   </LoadingButton>
                   <Grid container justifyContent="flex-end">
                     <Grid item>
-                      <Link href="#" variant="body2">
+                      <Link onClick={() => setValue("1")} variant="body2">
                         Already have an account? Log in
                       </Link>
                     </Grid>

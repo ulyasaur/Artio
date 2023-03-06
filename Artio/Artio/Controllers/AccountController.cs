@@ -60,16 +60,23 @@ namespace Artio.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            User user = new User();
-
-            this._mapper.Map(model, user);
-
-            if (await _accountService.RegistrateAsync(user, model.Password))
+            try
             {
-                return Ok();
-            }
+                User user = new User();
 
-            return BadRequest();
+                this._mapper.Map(model, user);
+
+                if (await _accountService.RegistrateAsync(user, model.Password))
+                {
+                    return Ok();
+                }
+
+                return BadRequest("User with such username already exists");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
