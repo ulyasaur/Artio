@@ -57,15 +57,12 @@ export default class UserStore {
         router.navigate("/");
     }
 
-    // setImage = (image: string) => {
-    //     if (this.user) {
-    //         this.user.image = image;
-    //     }
-    // }
-
-    // setDisplayName = (displayName: string) => {
-    //     if (this.user) {
-    //         this.user.displayName = displayName;
-    //     }
-    // }
+    getUser = async () => {
+        try {
+            const user = await agent.Account.current();
+            runInAction(() => this.currentUser = user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }

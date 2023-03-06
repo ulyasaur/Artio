@@ -3,11 +3,13 @@ using Artio.ViewModels;
 using AutoMapper;
 using BLL.Abstractions;
 using Core.Entitites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Artio.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

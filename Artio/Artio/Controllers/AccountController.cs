@@ -1,7 +1,9 @@
-﻿using Artio.ViewModels;
+﻿using Artio.Services.Abstractions;
+using Artio.ViewModels;
 using AutoMapper;
 using BLL.Abstractions;
 using Core.Entitites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +17,23 @@ namespace Artio.Controllers
 
         private readonly IUserService _userService;
 
+        private readonly IUserAccessor _userAccessor;
+
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, IUserService userService, IMapper mapper)
+        public AccountController(
+            IAccountService accountService,
+            IUserService userService, 
+            IUserAccessor userAccessor, 
+            IMapper mapper)
         {
             _accountService = accountService;
             _userService = userService;
+            _userAccessor = userAccessor;
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginViewModel user)
         {
@@ -46,6 +56,7 @@ namespace Artio.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -59,6 +70,28 @@ namespace Artio.Controllers
             }
 
             return BadRequest();
+        }
+
+        [Authorize]
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                string userId = this._userAccessor.GetUserId();
+
+                User user = await this._userService.GetUserByIdAsync(userId);
+
+                UserViewModel userViewModel = new UserViewModel();
+
+                this._mapper.Map(user, userViewModel);
+
+                return Ok(userViewModel);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }            
         }
     }
 }
