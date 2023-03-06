@@ -50,6 +50,8 @@ namespace Artio.Mapping
             CreateMap<User, UserViewModel>();
 
             CreateMap<User, RegisterViewModel>();
+
+            CreateMap<RegisterViewModel, User>();
         }
     }
 }

@@ -1,22 +1,23 @@
-import { alpha, AppBar, Avatar, Box, Button, Container, Icon, IconButton, InputBase, Menu, MenuItem, styled, Toolbar, Tooltip, Typography } from '@mui/material';
+import { alpha, AppBar, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputBase, Link, ListItemIcon, Menu, MenuItem, styled, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
 import SearchIcon from '@mui/icons-material/Search';
 import * as React from 'react';
+import { useStore } from '../stores/store';
+import PersonIcon from '@mui/icons-material/Person';
+import { Logout, Settings } from '@mui/icons-material';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from '../common/themes/theme';
+import { observer } from 'mobx-react-lite';
+import { Link as RouterLink } from "react-router-dom";
 
 function NavBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const { userStore: { currentUser, logout } } = useStore();
+
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -66,91 +67,118 @@ function NavBar() {
   }));
 
   return (
-    <AppBar
-      sx={{
-        backgroundColor: "HotPink",
-        position: "absolute"
-      }}
-    >
-      <Container>
-        <Toolbar disableGutters>
-          <Icon
-            sx={{
-              padding: "4px"
-            }}
-          >
-            <img height={27} width={27} src={logo} />
-          </Icon>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            ARTIO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              Feed
-            </Button>
-          </Box>
-
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search for tags…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-
-          <Box sx={{ flexGrow: 0, padding: "2px" }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu}>
-                <Avatar alt="Remy Sharp" src={userPlaceholder} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+    <ThemeProvider theme={theme}>
+      <AppBar
+        sx={{
+          position: "absolute"
+        }}
+      >
+        <Container>
+          <Toolbar disableGutters>
+            <Icon
+              sx={{
+                padding: "4px"
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              <img alt="artio" height={27} width={27} src={logo} />
+            </Icon>
+            <Link component={RouterLink} to="/">
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: 'white',
+                  textDecoration: 'none',
+                }}
+              >
+                ARTIO
+              </Typography>
+            </Link>
+
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              <Button
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Feed
+              </Button>
+            </Box>
+
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search for tags…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+
+
+            <Box sx={{ flexGrow: 0, padding: "2px" }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu}>
+                  <Avatar alt={currentUser?.displayName} src={currentUser?.imageUrl || userPlaceholder} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <ListItemIcon>
+                    <PersonIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      color: "black",
+                      textDecoration: "none"
+                    }}
+                  component={RouterLink} to={`profile/${currentUser?.username}`}>
+                    Profile
+                  </Link>                  
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <ListItemIcon>
+                    <Settings fontSize="small" />
+                  </ListItemIcon>
+                  Settings
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    handleCloseUserMenu();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
+                  Logout
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar >
+    </ThemeProvider>
   );
 }
-export default NavBar;
+export default observer(NavBar);
