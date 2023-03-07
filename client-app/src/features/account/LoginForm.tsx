@@ -14,7 +14,11 @@ import { theme } from "../../app/common/themes/theme";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
 
-export default observer(function LoginForm() {
+interface Props {
+  setValue: any;
+}
+
+export default observer(function LoginForm({setValue}: Props) {
   const { userStore } = useStore();
 
   return (
@@ -82,7 +86,7 @@ export default observer(function LoginForm() {
                   </LoadingButton>
                   <Grid container justifyContent="flex-end">
                     <Grid item>
-                      <Link href="#" variant="body2">
+                      <Link onClick={() => setValue("2")} variant="body2">
                         Don't have an account? Sign up
                       </Link>
                     </Grid>

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
 interface Props {
-    content: string;
+    content?: string;
 }
 
 export default function LoadingComponent({content}: Props) {
@@ -11,7 +11,7 @@ export default function LoadingComponent({content}: Props) {
     <Box sx={{ display: 'flex' }}>
       <CircularProgress />
       <Typography>
-        {content}
+        {content || "Loading app..."}
       </Typography>
     </Box>
   );

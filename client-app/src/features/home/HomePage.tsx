@@ -53,8 +53,8 @@ export default observer(function HomePage() {
                                 <Tab label="Sign Up" value="2" />
                             </Tabs>
                         </Box>
-                        <TabPanel value='1'><LoginForm /></TabPanel>
-                        <TabPanel value='2'><RegisterForm /></TabPanel>
+                        <TabPanel value='1'><LoginForm setValue={setValue} /></TabPanel>
+                        <TabPanel value='2'><RegisterForm setValue={setValue} /></TabPanel>
                     </TabContext>
                 </Grid>
             </Grid>

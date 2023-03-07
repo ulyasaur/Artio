@@ -1,4 +1,5 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
+import { toast } from "react-toastify";
 import agent from "../api/agent";
 import { Auth } from "../models/auth";
 import { User } from "../models/user";
@@ -38,16 +39,17 @@ export default class UserStore {
             runInAction(() => this.currentUser = authResponse.user);
             router.navigate(`/profile/${this.currentUser?.username}`);
         } catch (error) {
-            throw error;
+            console.log(error);
         }
     }
 
     register = async (creds: Auth) => {
         try {
             await agent.Account.register(creds);
-            router.navigate("/");
+            await this.login(creds);
+            toast.success("You're successfully registered!");
         } catch (error) {
-            throw error;
+            console.log(error);
         }
     }
 
@@ -57,15 +59,12 @@ export default class UserStore {
         router.navigate("/");
     }
 
-    // setImage = (image: string) => {
-    //     if (this.user) {
-    //         this.user.image = image;
-    //     }
-    // }
-
-    // setDisplayName = (displayName: string) => {
-    //     if (this.user) {
-    //         this.user.displayName = displayName;
-    //     }
-    // }
+    getUser = async () => {
+        try {
+            const user = await agent.Account.current();
+            runInAction(() => this.currentUser = user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
