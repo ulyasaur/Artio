@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Masonry } from "@mui/lab";
-import { Card, CardContent, CardHeader, IconButton, Link, Tooltip } from "@mui/material";
+import { Card, CardContent, CardHeader, IconButton, Tooltip } from "@mui/material";
 import { Post } from "../../app/models/post";
 import placeholder from "../../assets/placeholder.png";
 import AddIcon from '@mui/icons-material/Add';
@@ -53,6 +53,7 @@ export default observer(function ProfilePosts({ posts }: Props) {
                                 <img
                                     src={`${post.imageUrl || placeholder}?w=162&auto=format`}
                                     srcSet={`${post.imageUrl || placeholder}?w=162&auto=format&dpr=2 2x`}
+                                    alt="post"
                                     loading="lazy"
                                     style={{
                                         borderRadius: 4,
