@@ -1,3 +1,4 @@
+import { Like } from "./like";
 import { Tag } from "./tag";
 import { User } from "./user";
 
@@ -9,5 +10,5 @@ export interface Post {
     user: User;
     tags: Tag[];
     comments: Comment[];
-    likesCount: number;
+    likes: Like[];
 }

@@ -18,6 +18,6 @@ namespace Artio.ViewModels
 
         public List<CommentViewModel> Comments { get; set; }
 
-        public int LikesCount { get; set; }
+        public List<LikeViewModel> Likes { get; set; }
     }
 }

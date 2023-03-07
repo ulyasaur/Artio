@@ -78,7 +78,8 @@ const Profiles = {
 }
 
 const Posts = {
-    getUserPosts: (id: string) => requests.get<Post[]>(`/post/${id}`)
+    getUserPosts: (id: string) => requests.get<Post[]>(`/post/${id}`),
+    getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`)
 }
 
 const agent = {
