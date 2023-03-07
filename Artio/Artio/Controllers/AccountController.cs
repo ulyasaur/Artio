@@ -97,7 +97,7 @@ namespace Artio.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest("Cannot get current user");
             }            
         }
     }

@@ -48,7 +48,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -71,7 +71,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -115,7 +115,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -161,7 +161,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Artio.Controllers
             {
                 _logger.LogError(ex.Message);
 
-                return Problem(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }
