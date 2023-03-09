@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { theme } from "../../app/common/themes/theme";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
+import CommentSection from "./CommentSection";
 import PostInfo from "./PostInfo";
 
 export default observer(function PostPage() {
@@ -22,6 +23,7 @@ export default observer(function PostPage() {
     return (
         <ThemeProvider theme={theme}>
             <PostInfo post={post!}/>
+            <CommentSection post={post!}/>
         </ThemeProvider>
     );
 })

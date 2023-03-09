@@ -18,7 +18,7 @@ export default observer(function ProfilePage() {
         {
             loadUserPosts(profile!.id);
         }        
-    }, [username, profile?.id, posts, loadProfile, loadUserPosts, profile]);
+    }, [username, profile?.id, posts]);
     
     if (loadingProfile || loadingPosts) {
         return <LoadingComponent content="Loading profile..." />
