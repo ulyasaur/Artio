@@ -1,5 +1,6 @@
 using Artio.Services;
 using Artio.Services.Abstractions;
+using Artio.SignalR;
 using BLL.Abstractions;
 using BLL.Services;
 using Core.Entitites;
@@ -44,6 +45,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddLogging();
+builder.Services.AddSignalR();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddDefaultTokenProviders()
@@ -101,6 +103,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chat");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

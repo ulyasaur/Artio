@@ -31,6 +31,8 @@ namespace Artio.Mapping
             CreateMap<User, RegisterViewModel>();
 
             CreateMap<RegisterViewModel, User>();
+
+            CreateMap<CommentCreateModel, Comment>();
         }
     }
 }
