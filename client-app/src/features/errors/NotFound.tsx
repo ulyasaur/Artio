@@ -2,7 +2,7 @@ import { ThemeProvider } from "@emotion/react";
 import { Link as RouterLink } from "react-router-dom";
 import { theme } from "../../app/common/themes/theme";
 import NotFoundRobot from '../../assets/not-found.jpg';
-import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from "@mui/material";
+import { Button, Card, CardContent, Grid, Link, Typography } from "@mui/material";
 
 export default function NotFound() {
     return (
@@ -14,7 +14,7 @@ export default function NotFound() {
                 <CardContent>
                     <Grid container >
                         <Grid xs={6}>
-                            <img src={NotFoundRobot} style={{ width: "100%", height: "auto" }} />
+                            <img src={NotFoundRobot} alt="not-found" style={{ width: "100%", height: "auto" }} />
                         </Grid>
                         <Grid xs={6}
                             sx={{

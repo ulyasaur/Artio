@@ -6,6 +6,6 @@ namespace Artio.ViewModels
     {
         public int PostId { get; set; }
 
-        public UserViewModel User { get; set; }
+        public string UserId { get; set; }
     }
 }

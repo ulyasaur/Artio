@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Profile } from "../models/profile";
-import { store } from "./store";
 
 export default class ProfileStore {
     profile: Profile | null = null;
@@ -157,23 +156,6 @@ export default class ProfileStore {
     //     } catch (error) {
     //         console.log(error);
     //         runInAction(() => this.loadingFollowings = false);
-    //     }
-    // }
-
-    // loadUserActivities = async (username: string, predicate?: string) => {
-    //     this.loadingActivities = true;
-    //     try {
-    //         const activities = await agent.Profiles.listActivities(username,
-    //             predicate!);
-    //         runInAction(() => {
-    //             this.userActivities = activities;
-    //             this.loadingActivities = false;
-    //         })
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => {
-    //             this.loadingActivities = false;
-    //         })
     //     }
     // }
 }

@@ -9,32 +9,11 @@ namespace Artio.Mapping
         public MappingProfiles() 
         {
             CreateMap<Comment, CommentViewModel>();
-               /* .ForMember(d => d.User, o => o.MapFrom(s => 
-                    new UserViewModel() 
-                    { 
-                        DisplayName = s.User.DisplayName,
-                        ImageUrl = s.User.ImageUrl,
-                        UserId = s.User.Id,
-                    }));*/
 
             CreateMap<Like, LikeViewModel>();
-                /*.ForMember(d => d.User, o => o.MapFrom(s =>
-                    new UserViewModel()
-                    {
-                        DisplayName = s.User.DisplayName,
-                        ImageUrl = s.User.ImageUrl,
-                        UserId = s.User.Id,
-                    }));*/
 
             CreateMap<Post, PostViewModel>()
-                .ForMember(d => d.LikesCount, o => o.MapFrom(s => s.Likes.Count));
-                /*.ForMember(d => d.User, o => o.MapFrom(s =>
-                    new UserViewModel()
-                    {
-                        DisplayName = s.User.DisplayName,
-                        ImageUrl = s.User.ImageUrl,
-                        UserId = s.User.Id,
-                    }));*/
+                .ForMember(d => d.Tags, o => o.MapFrom(s => s.PostTags.Select(x => x.Tag)));
 
             CreateMap<Post, PostCreateViewModel>();
 
