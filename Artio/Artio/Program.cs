@@ -1,5 +1,6 @@
 using Artio.Services;
 using Artio.Services.Abstractions;
+using Artio.SignalR;
 using BLL.Abstractions;
 using BLL.Services;
 using Core.Entitites;
@@ -44,6 +45,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddLogging();
+builder.Services.AddSignalR();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddDefaultTokenProviders()
@@ -83,6 +85,21 @@ builder.Services.AddAuthentication(auth =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 var app = builder.Build();
@@ -101,6 +118,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chat");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

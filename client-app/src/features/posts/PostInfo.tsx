@@ -25,7 +25,7 @@ interface Props {
 
 export default observer(function PostInfo({ post }: Props) {
     const { postStore, userStore } = useStore();
-    const { isLiked } = postStore;
+    const { isLiked, toggleLike } = postStore;
     const { currentUser } = userStore;
 
     function handleClick() {
@@ -75,7 +75,7 @@ export default observer(function PostInfo({ post }: Props) {
                     alt={post.user.username}
                 />
                 <CardActions disableSpacing>
-                    <IconButton size="large">
+                    <IconButton size="large" onClick={() => toggleLike(post)}>
                         <FavoriteIcon color={isLiked(post) ? "error" : "inherit"} />
                     </IconButton>
                     <Typography sx={{ fontWeight: "bold" }} variant="body2">

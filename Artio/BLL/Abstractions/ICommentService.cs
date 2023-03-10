@@ -12,7 +12,7 @@ namespace BLL.Abstractions
     {
         Task<List<Comment>> GetCommentsForPost(int postId);
 
-        Task AddComment(Comment comment);
+        Task<Comment> AddComment(Comment comment);
 
         Task DeleteComment(int commentId);
     }

@@ -15,19 +15,22 @@ namespace BLL.Services
     {
         private readonly ICommentRepository _commentRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly IValidator<Comment> _validator;
 
         private readonly ILogger<CommentService> _logger;
 
-        public CommentService(ICommentRepository commentRepository, ILogger<CommentService> logger)
+        public CommentService(ICommentRepository commentRepository, IUserRepository userRepository, ILogger<CommentService> logger)
         {
             _commentRepository = commentRepository;
+            _userRepository = userRepository;
             _logger = logger;
 
             _validator = new CommentValidator();
         }
 
-        public async Task AddComment(Comment comment)
+        public async Task<Comment> AddComment(Comment comment)
         {
             if (!this._validator.Validate(comment))
             {
@@ -36,11 +39,17 @@ namespace BLL.Services
 
             try
             {
+                User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(comment.UserId));
+                comment.User = user;
+
                 await this._commentRepository.AddComment(comment);
+
+                return comment;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
         }
 

@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
+import { Like } from "../models/like";
 import { Post } from "../models/post";
 import { store } from "./store";
 
@@ -46,4 +47,21 @@ export default class PostStore {
         }
     }
 
+    toggleLike = async (post:Post) => {
+        try {
+            await agent.Posts.toggleLike(post.postId.toString());
+            const userId = store.userStore.currentUser?.id;
+
+            runInAction(() => {
+                if(this.isLiked(post)) {
+                    post.likes = post.likes.filter(l => l.userId !== userId);
+                }
+                else {                    
+                    post.likes.push(new Like(post.postId, userId!));
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
