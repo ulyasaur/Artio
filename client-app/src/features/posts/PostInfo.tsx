@@ -14,7 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Post } from "../../app/models/post";
 import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
-import formatDate from "../formatting/formatDate";
+import formatDate from "../../app/formatting/formatDate";
 import { Box, Chip, Divider, Link } from "@mui/material";
 import { useStore } from "../../app/stores/store";
 import { Link as RouterLink } from "react-router-dom";

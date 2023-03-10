@@ -10,6 +10,7 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from '../common/themes/theme';
 import { observer } from 'mobx-react-lite';
 import { Link as RouterLink } from "react-router-dom";
+import { router } from '../router/router';
 
 function NavBar() {
   const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
@@ -144,18 +145,14 @@ function NavBar() {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem onClick={() => {
+                      handleCloseUserMenu();
+                      router.navigate(`profile/${currentUser?.username}`);
+                    }}>
                       <ListItemIcon>
                         <PersonIcon fontSize="small" />
                       </ListItemIcon>
-                      <Link
-                        style={{
-                          color: "black",
-                          textDecoration: "none"
-                        }}
-                        component={RouterLink} to={`profile/${currentUser?.username}`}>
                         Profile
-                      </Link>
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={handleCloseUserMenu}>

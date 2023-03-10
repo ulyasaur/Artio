@@ -74,7 +74,10 @@ const Account = {
 }
 
 const Profiles = {
-    get: (username: string) => requests.get<Profile>(`/user/${username}`)
+    get: (username: string) => requests.get<Profile>(`/user/${username}`),
+    toggleFollow: (targetId : string) => requests.put(`/user/${targetId}`, targetId),
+    getFollowers: (targetId : string) => requests.get<User[]>(`/user/${targetId}/followers`),
+    getFollowings: (observerId : string) => requests.get<User[]>(`/user/${observerId}/followings`)
 }
 
 const Posts = {

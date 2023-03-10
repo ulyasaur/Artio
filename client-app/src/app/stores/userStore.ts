@@ -4,10 +4,13 @@ import agent from "../api/agent";
 import { Auth } from "../models/auth";
 import { User } from "../models/user";
 import { router } from "../router/router";
+import { store } from "./store";
 
 export default class UserStore {
     currentUser: User | null = null;
+    followings: User[] = [];
     token: string | null = localStorage.getItem("jwt");
+    loading: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -15,7 +18,7 @@ export default class UserStore {
         reaction(
             () => this.token,
             token => {
-                if(token) {
+                if (token) {
                     localStorage.setItem("jwt", token);
                 } else {
                     localStorage.removeItem("jwt");
@@ -28,6 +31,10 @@ export default class UserStore {
         return !!this.currentUser;
     }
 
+    isFollowing = (userId: string) => {
+        return !!this.followings.find(f => f.id === userId);
+    }
+
     setToken = (token: string | null) => {
         this.token = token;
     }
@@ -35,8 +42,14 @@ export default class UserStore {
     login = async (creds: Auth) => {
         try {
             const authResponse = await agent.Account.login(creds);
+            const followings = await agent.Profiles.getFollowings(authResponse.user.id);
             this.setToken(authResponse.token);
-            runInAction(() => this.currentUser = authResponse.user);
+            
+            runInAction(() => {
+                this.currentUser = authResponse.user;
+                this.followings = followings;
+            });
+            
             router.navigate(`/profile/${this.currentUser?.username}`);
         } catch (error) {
             console.log(error);
@@ -65,6 +78,34 @@ export default class UserStore {
             runInAction(() => this.currentUser = user);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    toggleFollowing = async (user: User) => {
+        this.loading = true;
+
+        try {
+            await agent.Profiles.toggleFollow(user.id);
+            runInAction(() => {
+                if(this.isFollowing(user.id)){
+                    this.followings.filter(f => f.id !== user.id);
+                    if(store.profileStore.profile) {
+                        store.profileStore.followers.filter(f => f.id !== this.currentUser?.id);
+                        store.profileStore.profile.followersCount--;
+                    }
+                }
+                else {
+                    if(store.profileStore.profile) {
+                        store.profileStore.followers.push(this.currentUser!);
+                        store.profileStore.profile.followersCount++;
+                    }
+                    this.followings.push(user);
+                }
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
         }
     }
 }
