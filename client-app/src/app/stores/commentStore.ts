@@ -1,6 +1,4 @@
-import { HubConnection } from "@microsoft/signalr";
-import { HubConnectionBuilder } from "@microsoft/signalr/dist/esm/HubConnectionBuilder";
-import { LogLevel } from "@microsoft/signalr/dist/esm/ILogger";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { makeAutoObservable, runInAction } from "mobx";
 import { ChatComment } from "../models/comment";
 import { store } from "./store";
@@ -27,16 +25,12 @@ export default class CommentStore {
 
             this.hubConnection.on("LoadComments", (comments: ChatComment[]) => {
                 runInAction(() => { 
-                    // comments.forEach(comment => {
-                    //     comment.createdAt = new Date(comment.createdAt + "Z");
-                    // });
                     this.comments = comments; 
                 });
             });
 
             this.hubConnection.on("ReceiveComment", (comment: ChatComment) => {
                 runInAction(() => { 
-                    //comment.createdAt = new Date(comment.createdAt);
                     this.comments.unshift(comment); 
                 });
             });
