@@ -17,15 +17,23 @@ namespace Artio.Controllers
     {
         private readonly IPostService _postService;
 
+        private readonly ILikeService _likeService;
+
         private readonly ILogger<PostController> _logger;
 
         private readonly IUserAccessor _userAccessor;
 
         private readonly IMapper _mapper;
 
-        public PostController(IPostService postService, ILogger<PostController> logger, IUserAccessor userAccessor, IMapper mapper)
+        public PostController(
+            IPostService postService, 
+            ILikeService likeService, 
+            ILogger<PostController> logger, 
+            IUserAccessor userAccessor, 
+            IMapper mapper)
         {
             _postService = postService;
+            _likeService = likeService;
             _logger = logger;
             _userAccessor = userAccessor;
             _mapper = mapper;
@@ -132,6 +140,24 @@ namespace Artio.Controllers
                 post.CreatedAt = DateTimeOffset.UtcNow;
 
                 await this._postService.AddPostAsync(post);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPost("like/{postId}")]
+        public async Task<IActionResult> ToggleLike(int postId)
+        {
+            try
+            {
+                string userId = this._userAccessor.GetUserId();
+                await this._likeService.ToggleLike(userId, postId);
 
                 return Ok();
             }

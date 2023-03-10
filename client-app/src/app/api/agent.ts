@@ -79,7 +79,8 @@ const Profiles = {
 
 const Posts = {
     getUserPosts: (id: string) => requests.get<Post[]>(`/post/${id}`),
-    getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`)
+    getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`),
+    toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId)
 }
 
 const agent = {
