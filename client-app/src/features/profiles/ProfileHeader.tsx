@@ -1,17 +1,24 @@
 import { ThemeProvider } from "@emotion/react";
-import { Avatar, Button, Card, CardContent, CardMedia, Chip, Divider, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardContent, CardMedia, Chip, Container, Divider, Grid, Link, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/common/themes/theme";
 import { Profile } from "../../app/models/profile";
+import { User } from "../../app/models/user";
+import { useStore } from "../../app/stores/store";
 import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
+import FollowButton from "../followers/FollowButton";
+import { Link as RouterLink } from "react-router-dom";
 
 interface Props {
     profile: Profile;
 }
 
 export default observer(function ProfileHeader({ profile }: Props) {
+    const { userStore } = useStore();
+    const { currentUser } = userStore;
+
     function handleClick() {
 
     }
@@ -67,33 +74,53 @@ export default observer(function ProfileHeader({ profile }: Props) {
                         </Grid>
                         <Grid xs={0.5} />
                         <Grid xs={1.5}>
-                            <Typography
-                                variant="h4"
+                            <Link
+                                component={RouterLink}
+                                to={`/${profile.username}/followings`}
                                 sx={{
-                                    fontWeight: "bold"
+                                    color: "black", textDecoration: "none"
                                 }}
-                                textAlign={"center"}
                             >
-                                {profile.followingsCount}
-                            </Typography>
-                            <Typography variant="h6" textAlign={"center"}>
-                                followings
-                            </Typography>
+                                <Container>
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
+                                            fontWeight: "bold"
+                                        }}
+                                        textAlign={"center"}
+                                    >
+                                        {profile.followingsCount}
+                                    </Typography>
+                                    <Typography variant="h6" textAlign={"center"}>
+                                        followings
+                                    </Typography>
+                                </Container>
+                            </Link>
                         </Grid>
                         <Divider orientation="vertical" flexItem />
                         <Grid xs={1.5}>
-                            <Typography
-                                variant="h4"
+                            <Link
+                                component={RouterLink}
+                                to={`/${profile.username}/followers`}
                                 sx={{
-                                    fontWeight: "bold"
+                                    color: "black", textDecoration: "none"
                                 }}
-                                textAlign={"center"}
                             >
-                                {profile.followersCount}
-                            </Typography>
-                            <Typography variant="h6" textAlign={"center"}>
-                                followers
-                            </Typography>
+                                <Container>
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
+                                            fontWeight: "bold"
+                                        }}
+                                        textAlign={"center"}
+                                    >
+                                        {profile.followersCount}
+                                    </Typography>
+                                    <Typography variant="h6" textAlign={"center"}>
+                                        followers
+                                    </Typography>
+                                </Container>
+                            </Link>
                         </Grid>
 
                         <Grid
@@ -112,36 +139,26 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                 paddingTop: "10px"
                             }}
                         >
-                            <Button
-                                sx={{
-                                    width: "100%"
-                                }}
-                                variant="contained"
-                            >
-                                Follow
-                            </Button>
-                            <Button
-                                sx={{
-                                    width: "100%"
-                                }}
-                                color="error"
-                                variant="outlined"
-                            >
-                                Unfollow
-                            </Button>
-                            <Button
-                                sx={{
-                                    width: "100%",
-                                    color: "grey",
-                                    borderColor: "grey",
-                                    '&:hover': {
-                                        borderColor: "grey"
-                                    }
-                                }}
-                                variant="outlined"
-                            >
-                                Edit profile
-                            </Button>
+                            {(currentUser?.id === profile.id)
+                                ? <Button
+                                    sx={{
+                                        width: "100%",
+                                        color: "grey",
+                                        borderColor: "grey",
+                                        '&:hover': {
+                                            borderColor: "grey"
+                                        }
+                                    }}
+                                    variant="outlined"
+                                >
+                                    Edit profile
+                                </Button>
+                                : <FollowButton user={new User(
+                                    profile.id,
+                                    profile.username,
+                                    profile.username,
+                                    profile.imageUrl)} />}
+
                         </Grid>
                     </Grid>
                 </CardContent>

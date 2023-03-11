@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { theme } from "../../app/common/themes/theme";
 import { Post } from "../../app/models/post";
 import userPlaceHolder from "../../assets/user.png";
-import formatDate from "../formatting/formatDate";
+import formatDate from "../../app/formatting/formatDate";
 import { Link as RouterLink } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
