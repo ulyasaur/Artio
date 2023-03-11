@@ -183,7 +183,7 @@ namespace DAL.Repositories.ef
             {
                 return await this._context.UserFollowings
                     .Include(t => t.Target)
-                    .Include (o => o.ObserverId)
+                    .Include(o => o.Observer)
                     .FirstOrDefaultAsync(u => u.ObserverId.Equals(observerId) && u.TargetId.Equals(targetId));
             }
             catch (Exception ex)

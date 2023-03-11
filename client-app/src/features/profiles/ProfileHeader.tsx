@@ -4,14 +4,20 @@ import { Box } from "@mui/system";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/common/themes/theme";
 import { Profile } from "../../app/models/profile";
+import { User } from "../../app/models/user";
+import { useStore } from "../../app/stores/store";
 import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
+import FollowButton from "../followers/FollowButton";
 
 interface Props {
     profile: Profile;
 }
 
 export default observer(function ProfileHeader({ profile }: Props) {
+    const { userStore } = useStore();
+    const { currentUser } = userStore;
+
     function handleClick() {
 
     }
@@ -112,36 +118,26 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                 paddingTop: "10px"
                             }}
                         >
-                            <Button
-                                sx={{
-                                    width: "100%"
-                                }}
-                                variant="contained"
-                            >
-                                Follow
-                            </Button>
-                            <Button
-                                sx={{
-                                    width: "100%"
-                                }}
-                                color="error"
-                                variant="outlined"
-                            >
-                                Unfollow
-                            </Button>
-                            <Button
-                                sx={{
-                                    width: "100%",
-                                    color: "grey",
-                                    borderColor: "grey",
-                                    '&:hover': {
-                                        borderColor: "grey"
-                                    }
-                                }}
-                                variant="outlined"
-                            >
-                                Edit profile
-                            </Button>
+                            {(currentUser?.id === profile.id)
+                                ? <Button
+                                    sx={{
+                                        width: "100%",
+                                        color: "grey",
+                                        borderColor: "grey",
+                                        '&:hover': {
+                                            borderColor: "grey"
+                                        }
+                                    }}
+                                    variant="outlined"
+                                >
+                                    Edit profile
+                                </Button>
+                                : <FollowButton user={new User(
+                                    profile.id,
+                                    profile.username,
+                                    profile.username,
+                                    profile.imageUrl)} />}
+
                         </Grid>
                     </Grid>
                 </CardContent>

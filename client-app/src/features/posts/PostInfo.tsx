@@ -18,6 +18,7 @@ import formatDate from "../../app/formatting/formatDate";
 import { Box, Chip, Divider, Link } from "@mui/material";
 import { useStore } from "../../app/stores/store";
 import { Link as RouterLink } from "react-router-dom";
+import FollowButton from "../followers/FollowButton";
 
 interface Props {
     post: Post;
@@ -50,10 +51,11 @@ export default observer(function PostInfo({ post }: Props) {
                         </Link>
                     }
                     action={
-                        currentUser?.username === post.user.username &&
-                        <IconButton>
+                        (currentUser?.username === post.user.username) 
+                        ? <IconButton>
                             <MoreVertIcon />
                         </IconButton>
+                        : <FollowButton user={post.user}/>
                     }
                     title={
                         <Link
