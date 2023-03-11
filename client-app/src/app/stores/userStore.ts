@@ -42,12 +42,10 @@ export default class UserStore {
     login = async (creds: Auth) => {
         try {
             const authResponse = await agent.Account.login(creds);
-            const followings = await agent.Profiles.getFollowings(authResponse.user.id);
             this.setToken(authResponse.token);
             
             runInAction(() => {
                 this.currentUser = authResponse.user;
-                this.followings = followings;
             });
             
             router.navigate(`/profile/${this.currentUser?.username}`);
@@ -74,8 +72,13 @@ export default class UserStore {
 
     getUser = async () => {
         try {
-            const user = await agent.Account.current();
-            runInAction(() => this.currentUser = user);
+            const user = await agent.Account.current();            
+            const followings = await agent.Profiles.getFollowings(user.id);
+
+            runInAction(() => {
+                this.currentUser = user;
+                this.followings = followings;
+            });
         } catch (error) {
             console.log(error);
         }
@@ -88,9 +91,9 @@ export default class UserStore {
             await agent.Profiles.toggleFollow(user.id);
             runInAction(() => {
                 if(this.isFollowing(user.id)){
-                    this.followings.filter(f => f.id !== user.id);
+                    this.followings = this.followings.filter(f => f.id !== user.id);
                     if(store.profileStore.profile) {
-                        store.profileStore.followers.filter(f => f.id !== this.currentUser?.id);
+                        store.profileStore.followers! = store.profileStore.followers!.filter(f => f.id !== this.currentUser?.id);
                         store.profileStore.profile.followersCount--;
                     }
                 }
