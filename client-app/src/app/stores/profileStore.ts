@@ -29,8 +29,6 @@ export default class ProfileStore {
             const profile = await agent.Profiles.get(username);
             runInAction(() => {
                 this.profile = profile;
-                this.loadFollowers();
-                this.loadFollowings();
                 this.loadingProfile = false
             });
         } catch (error) {

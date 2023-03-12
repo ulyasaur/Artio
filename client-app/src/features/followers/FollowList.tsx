@@ -16,16 +16,35 @@ export default observer(function FollowButton({ predicate }: Props) {
     const { profileStore } = useStore();
     const { loadingProfile,
         loadProfile,
+        profile,
         followers,
         followings,
+        loadFollowers,
+        loadFollowings,
         loadingFollowers,
         loadingFollowings } = profileStore;
 
     useEffect(() => {
-        loadProfile(username!);
+        const fetchData = async () => {
+            await loadProfile(username!);
+        };
+
+        fetchData();
     }, [username, loadProfile]);
 
-    if (loadingProfile || loadingFollowers || loadingFollowings) {
+    useEffect(() => {
+        if (profile) {
+            if (predicate === "followers") {
+                loadFollowers();
+            } else {
+                loadFollowings();
+            }
+        }
+    }, [profile, predicate, loadFollowers, loadFollowings]);
+
+    const loading = predicate === "followers" ? loadingFollowers : loadingFollowings;
+
+    if (loadingProfile || loading) {
         return <LoadingComponent content={`Loading ${predicate}...`} />
     }
 

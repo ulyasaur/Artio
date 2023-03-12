@@ -93,7 +93,7 @@ export default class UserStore {
                 if(this.isFollowing(user.id)){
                     this.followings = this.followings.filter(f => f.id !== user.id);
                     if(store.profileStore.profile) {
-                        store.profileStore.followers! = store.profileStore.followers!.filter(f => f.id !== this.currentUser?.id);
+                        store.profileStore.followers = store.profileStore.followers.filter(f => f.id !== this.currentUser?.id);
                         store.profileStore.profile.followersCount--;
                     }
                 }
