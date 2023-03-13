@@ -8,7 +8,7 @@ export interface Post {
     description: string;
     createdAt: string;
     user: User;
+    commentCount: number;
     tags: Tag[];
-    comments: Comment[];
     likes: Like[];
 }

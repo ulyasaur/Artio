@@ -22,9 +22,10 @@ import FollowButton from "../followers/FollowButton";
 
 interface Props {
     post: Post;
+    elevation?: number;
 }
 
-export default observer(function PostInfo({ post }: Props) {
+export default observer(function PostInfo({ post, elevation }: Props) {
     const { postStore, userStore } = useStore();
     const { isLiked, toggleLike } = postStore;
     const { currentUser } = userStore;
@@ -39,6 +40,7 @@ export default observer(function PostInfo({ post }: Props) {
                 sx={{
                     minHeight: "89vh"
                 }}
+                elevation={elevation || 0}
             >
                 <CardHeader
                     avatar={

@@ -83,6 +83,8 @@ const Profiles = {
 const Posts = {
     getUserPosts: (id: string) => requests.get<Post[]>(`/post/${id}`),
     getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`),
+    getPostsByFollowings: () => requests.get<Post[]>(`/post/followings`),
+    getPostsByUserTags: () => requests.get<Post[]>(`/post/tags`),
     toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId)
 }
 

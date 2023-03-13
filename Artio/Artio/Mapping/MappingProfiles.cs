@@ -13,7 +13,8 @@ namespace Artio.Mapping
             CreateMap<Like, LikeViewModel>();
 
             CreateMap<Post, PostViewModel>()
-                .ForMember(d => d.Tags, o => o.MapFrom(s => s.PostTags.Select(x => x.Tag)));
+                .ForMember(d => d.Tags, o => o.MapFrom(s => s.PostTags.Select(x => x.Tag)))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comments.Count));
 
             CreateMap<Post, PostCreateViewModel>();
 
