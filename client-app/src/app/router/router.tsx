@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 import NotFound from "../../features/errors/NotFound";
 import FollowList from "../../features/followers/FollowList";
 import HomePage from "../../features/home/HomePage";
+import FeedPage from "../../features/posts/FeedPage";
 import PostPage from "../../features/posts/PostPage";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import App from "../layout/App";
@@ -14,6 +15,7 @@ export const routes: RouteObject[] = [
         children: [
             {
                 element: <RequireAuth />, children: [
+                    { path: "feed", element: <FeedPage /> },
                     { path: "profile/:username", element: <ProfilePage /> },
                     { path: "post/:postId", element: <PostPage /> },
                     { path: ":username/followers", element: <FollowList predicate="followers" /> },

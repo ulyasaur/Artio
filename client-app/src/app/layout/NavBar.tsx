@@ -105,11 +105,19 @@ function NavBar() {
             {isLoggedIn &&
               <>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                  <Button
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  <Link
+                    component={RouterLink}
+                    to={`/feed`}
+                    sx={{
+                      color: "black", textDecoration: "none"
+                    }}
                   >
-                    Feed
-                  </Button>
+                    <Button
+                      sx={{ my: 2, color: 'white', display: 'block' }}
+                    >
+                      Feed
+                    </Button>
+                  </Link>
                 </Box>
 
                 <Search>
@@ -152,7 +160,7 @@ function NavBar() {
                       <ListItemIcon>
                         <PersonIcon fontSize="small" />
                       </ListItemIcon>
-                        Profile
+                      Profile
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={handleCloseUserMenu}>

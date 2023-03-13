@@ -47,6 +47,27 @@ export default class PostStore {
         }
     }
 
+    loadPosts = async (predicate: string) => {
+        this.loadingPosts = true;
+        try {
+            let posts : Post[]; 
+
+            if(predicate === "tags") {
+                posts = await agent.Posts.getPostsByUserTags();
+            } else {
+                posts = await agent.Posts.getPostsByFollowings();
+            }
+
+            runInAction(() => {
+                this.posts = posts;
+                this.loadingPosts = false
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingPosts = false);
+        }
+    }
+
     toggleLike = async (post:Post) => {
         try {
             await agent.Posts.toggleLike(post.postId.toString());

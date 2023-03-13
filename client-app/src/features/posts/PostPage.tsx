@@ -22,7 +22,7 @@ export default observer(function PostPage() {
     }
     return (
         <ThemeProvider theme={theme}>
-            <PostInfo post={post!}/>
+            <PostInfo post={post!} elevation={2}/>
             <CommentSection post={post!}/>
         </ThemeProvider>
     );

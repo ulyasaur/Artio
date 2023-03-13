@@ -199,7 +199,8 @@ namespace BLL.Services
 
                 var tags = user.UserTags.Select(t => t.TagId);
 
-                posts = await this._postRepository.GetAllPostsAsync(p => tags.Any(t => p.PostTags.Any(pt => pt.TagId == t)));
+                //posts = await this._postRepository.GetAllPostsAsync(p => tags.Any(t => p.PostTags.Any(pt => pt.TagId == t)));
+                posts = await this._postRepository.GetAllPostsAsync(p => p.PostTags.Any(pt => tags.Contains(pt.TagId)));
             }
             catch (Exception ex)
             {
