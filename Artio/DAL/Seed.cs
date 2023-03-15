@@ -13,7 +13,7 @@ namespace DAL
         public static async Task SeedData(ApplicationContext context,
             UserManager<User> userManager)
         {
-            if (!userManager.Users.Any() 
+            if (!userManager.Users.Any()
                 && !context.Posts.Any()
                 && !context.Tags.Any())
             {
@@ -89,16 +89,23 @@ namespace DAL
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
 
-                
+
+                var photos = new List<Photo> {
+                    new Photo { Id = "1", Url = "" },
+                    new Photo { Id = "2", Url = "" },
+                    new Photo { Id = "3", Url = "" }
+                };
+
+                await context.Photos.AddRangeAsync(photos);
 
                 var posts = new List<Post>
                 {
                     new Post
                     {
-                        ImageUrl = "",
+                        Image = photos[0],
                         Description = "very interesting description",
                         CreatedAt = DateTimeOffset.UtcNow.AddDays(-3),
-                        User = users[0],   
+                        User = users[0],
                         PostTags = new List<PostTag>
                         {
                             new PostTag
@@ -113,10 +120,10 @@ namespace DAL
                     },
                     new Post
                     {
-                        ImageUrl = "",
+                        Image = photos[1],
                         Description = "not very interesting description",
                         CreatedAt = DateTimeOffset.UtcNow.AddDays(-8),
-                        User = users[0],   
+                        User = users[0],
                         PostTags = new List<PostTag>
                         {
                             new PostTag
@@ -135,10 +142,10 @@ namespace DAL
                     },
                     new Post
                     {
-                        ImageUrl = "",
+                        Image = photos[2],
                         Description = "yipeeee",
                         CreatedAt = DateTimeOffset.UtcNow.AddDays(-20),
-                        User = users[0],   
+                        User = users[0],
                         PostTags = new List<PostTag>
                         {
                             new PostTag

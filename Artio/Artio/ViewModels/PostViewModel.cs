@@ -6,7 +6,7 @@ namespace Artio.ViewModels
     {
         public int PostId { get; set; }
 
-        public string ImageUrl { get; set; }
+        public PhotoViewModel Image { get; set; }
 
         public string Description { get; set; }
 

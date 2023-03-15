@@ -8,9 +8,9 @@
 
         public string DisplayName { get; set; }
 
-        public string ImageUrl { get; set; }
+        public PhotoViewModel Image { get; set; }
 
-        public string BackgroundUrl { get; set; }
+        public PhotoViewModel Background { get; set; }
 
         public string Bio { get; set; }
 

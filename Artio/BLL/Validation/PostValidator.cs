@@ -11,8 +11,7 @@ namespace BLL.Validation
     {
         public bool Validate(Post entity)
         {
-            return !string.IsNullOrEmpty(entity.ImageUrl) 
-                && !string.IsNullOrEmpty(entity.UserId);
+            return !string.IsNullOrEmpty(entity.UserId);
         }
     }
 }
