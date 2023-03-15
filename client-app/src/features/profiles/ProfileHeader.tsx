@@ -37,7 +37,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
             >
                 <Avatar
                     alt="display name"
-                    src={profile.imageUrl || userPlaceHolder}
+                    src={profile.image ? profile.image?.url : userPlaceHolder}
                     variant="rounded"
                     sx={{
                         display: "block",
@@ -50,7 +50,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                 />
                 <CardMedia
                     sx={{ height: 250 }}
-                    image={profile.backgroundUrl || placeholder}
+                    image={profile.background ? profile.background?.url : placeholder}
                 />
                 <CardContent
 
@@ -157,7 +157,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                     profile.id,
                                     profile.username,
                                     profile.username,
-                                    profile.imageUrl)} />}
+                                    profile.image)} />}
 
                         </Grid>
                     </Grid>

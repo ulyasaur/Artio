@@ -16,6 +16,8 @@ namespace DAL
 
         public DbSet<Like> Likes { get; set; }
 
+        public DbSet<Photo> Photos { get; set; }
+
         public DbSet<Post> Posts { get; set; }
 
         public DbSet<PostTag> PostTags { get; set; }

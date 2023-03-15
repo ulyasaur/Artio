@@ -1,8 +1,10 @@
+import { Photo } from "./photo";
+
 export interface User {
     id: string;
     username: string;
     displayName: string;
-    imageUrl?: string;
+    image?: Photo;
 }
 
 export class User implements User {
@@ -10,10 +12,10 @@ export class User implements User {
         id: string, 
         username: string, 
         displayName: string, 
-        imageUrl?: string){
+        image?: Photo){
             this.id = id;
             this.username = username;
             this.displayName = displayName;
-            this.imageUrl = imageUrl;
+            this.image = image;
     }
 }

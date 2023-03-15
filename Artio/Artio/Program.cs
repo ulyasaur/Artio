@@ -6,6 +6,8 @@ using BLL.Services;
 using Core.Entitites;
 using DAL;
 using DAL.Abstractions;
+using DAL.Photos.Abstractions;
+using DAL.Photos;
 using DAL.Repositories.ef;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -36,13 +38,17 @@ builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IPostService, PostService>();    
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+
+builder.Services.Configure<CloudinarySettings>(appConfig.GetSection("Cloudinary"));
 
 builder.Services.AddLogging();
 builder.Services.AddSignalR();

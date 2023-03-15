@@ -10,6 +10,6 @@ namespace Artio.ViewModels
 
         public string DisplayName { get; set; }
 
-        public string ImageUrl { get; set; }
+        public PhotoViewModel Image{ get; set; }
     }
 }

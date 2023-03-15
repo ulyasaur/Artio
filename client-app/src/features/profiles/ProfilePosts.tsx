@@ -51,8 +51,8 @@ export default observer(function ProfilePosts({ posts }: Props) {
                         {posts.map((post) => (
                             <div key={post.postId} onClick={() => router.navigate(`/post/${post.postId}`)}>
                                 <img
-                                    src={`${post.imageUrl || placeholder}?w=162&auto=format`}
-                                    srcSet={`${post.imageUrl || placeholder}?w=162&auto=format&dpr=2 2x`}
+                                    src={`${post.image ? post.image.url : placeholder}?w=162&auto=format`}
+                                    srcSet={`${post.image ? post.image.url : placeholder}?w=162&auto=format&dpr=2 2x`}
                                     alt="post"
                                     loading="lazy"
                                     style={{

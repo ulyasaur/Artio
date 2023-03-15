@@ -1,11 +1,12 @@
+import { Photo } from "./photo";
 import { Tag } from "./tag";
 
 export interface Profile {
     id: string;
     username: string;
     displayName: string;
-    imageUrl?: string;
-    backgroundUrl?: string;
+    image?: Photo;
+    background?: Photo;
     bio?: string;
     followersCount: number;
     followingsCount: number;

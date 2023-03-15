@@ -3,6 +3,7 @@ using System;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230315105552_AddedPhotos")]
+    partial class AddedPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +157,7 @@ namespace DAL.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("BackgroundId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
@@ -175,6 +179,7 @@ namespace DAL.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("ImageId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -468,11 +473,15 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Core.Entitites.Photo", "Background")
                         .WithMany()
-                        .HasForeignKey("BackgroundId");
+                        .HasForeignKey("BackgroundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Core.Entitites.Photo", "Image")
                         .WithMany()
-                        .HasForeignKey("ImageId");
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Background");
 

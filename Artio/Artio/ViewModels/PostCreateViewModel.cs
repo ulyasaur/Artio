@@ -2,7 +2,7 @@
 {
     public class PostCreateViewModel
     {
-        public string ImageUrl { get; set; }
+        public PhotoViewModel Image { get; set; }
 
         public string Description { get; set; }
 
