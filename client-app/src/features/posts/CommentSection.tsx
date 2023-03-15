@@ -79,7 +79,7 @@ export default observer(function CommentSection({ post }: Props) {
                                     <Link component={RouterLink} to={`/profile/${comment.user.username}`}>
                                         <Avatar
                                             alt="display name"
-                                            src={comment.user.imageUrl || userPlaceHolder}
+                                            src={comment.user.image ? comment.user.image?.url : userPlaceHolder}
                                             variant="circular"
                                         />
                                     </Link>

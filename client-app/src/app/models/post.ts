@@ -1,10 +1,11 @@
 import { Like } from "./like";
+import { Photo } from "./photo";
 import { Tag } from "./tag";
 import { User } from "./user";
 
 export interface Post {
     postId: number;
-    imageUrl: string;
+    image: Photo;
     description: string;
     createdAt: string;
     user: User;

@@ -47,7 +47,7 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                         <Link component={RouterLink} to={`/profile/${post.user.username}`}>
                             <Avatar
                                 alt="display name"
-                                src={post.user.imageUrl || userPlaceHolder}
+                                src={post.user.image ? post.user.image?.url : userPlaceHolder}
                                 variant="circular"
                             />
                         </Link>
@@ -75,7 +75,7 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                 />
                 <CardMedia
                     component="img"
-                    image={post.imageUrl || placeholder}
+                    image={post.image ? post.image.url : placeholder}
                     alt={post.user.username}
                 />
                 <CardActions disableSpacing>
