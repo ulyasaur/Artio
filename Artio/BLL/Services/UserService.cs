@@ -293,11 +293,6 @@ namespace BLL.Services
                 throw new ArgumentNullException("User id must not be null");
             }
 
-            if (!this._validator.Validate(user))
-            {
-                throw new ArgumentException("User is not valid");
-            }
-
             try
             {
                 User existingUser = await this._userRepository.GetUserAsync(x => x.Id.Equals(user.Id));

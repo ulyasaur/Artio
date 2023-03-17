@@ -84,6 +84,12 @@ export default class UserStore {
         }
     }
 
+    setDisplayName = (displayName: string) => {
+        if (this.currentUser) {
+            this.currentUser.displayName = displayName;
+        }
+    }
+
     toggleFollowing = async (user: User) => {
         this.loading = true;
 

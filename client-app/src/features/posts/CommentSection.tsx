@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { useStore } from "../../app/stores/store";
 import { useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
-import FormTextArea from "../../app/common/form/FormTextArea";
+import FormTextField from "../../app/common/form/FormTextField";
 
 interface Props {
     post: Post;
@@ -57,7 +57,7 @@ export default observer(function CommentSection({ post }: Props) {
                     >
                         {({ isSubmitting, isValid, handleSubmit }) => (
                             <form onSubmit={() => isValid && handleSubmit()}>
-                                <FormTextArea name="body" placeholder='Enter your comment' />
+                                <FormTextField multiline minRows={4} name="body" placeholder='Enter your comment' />
                                 <LoadingButton
                                     loading={isSubmitting}
                                     type="submit"

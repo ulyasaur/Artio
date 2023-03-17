@@ -69,6 +69,25 @@ export default class ProfileStore {
         }
     }
     
+    updateProfile = async (profile: Partial<Profile>) => {
+        this.loadingProfile = true;
+
+        try {
+            await agent.Profiles.updateProfile(profile);
+            runInAction(() => {
+                if (profile.displayName && profile.displayName !==
+                    store.userStore.currentUser?.displayName) {
+                    store.userStore.setDisplayName(profile.displayName);
+                }
+                this.profile = { ...this.profile, ...profile as Profile };
+                this.loadingProfile = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingProfile = false);
+        }
+    }
+    
     // uploadPhoto = async (file: Blob) => {
     //     this.uploading = true;
 
@@ -120,25 +139,6 @@ export default class ProfileStore {
     //             if (this.profile) {
     //                 this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id);
     //             }
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
-
-    // updateProfile = async (profile: Partial<Profile>) => {
-    //     this.loading = true;
-
-    //     try {
-    //         await agent.Profiles.updateProfile(profile);
-    //         runInAction(() => {
-    //             if (profile.displayName && profile.displayName !==
-    //                 store.userStore.user?.displayName) {
-    //                 store.userStore.setDisplayName(profile.displayName);
-    //             }
-    //             this.profile = { ...this.profile, ...profile as Profile };
     //             this.loading = false;
     //         });
     //     } catch (error) {

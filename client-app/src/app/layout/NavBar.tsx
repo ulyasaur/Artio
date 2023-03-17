@@ -163,7 +163,10 @@ function NavBar() {
                       Profile
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem onClick={() => {
+                      router.navigate("/settings");
+                      handleCloseUserMenu();
+                    }}>
                       <ListItemIcon>
                         <Settings fontSize="small" />
                       </ListItemIcon>
