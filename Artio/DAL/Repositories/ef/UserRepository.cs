@@ -201,7 +201,8 @@ namespace DAL.Repositories.ef
 
                 dbUser.Bio = user.Bio;
                 dbUser.DisplayName = user.DisplayName;
-                //dbUser.ImageUrl = user.ImageUrl;
+                dbUser.Image = user.Image;
+                dbUser.Background = user.Background;
 
                 await this._context.SaveChangesAsync();
             }

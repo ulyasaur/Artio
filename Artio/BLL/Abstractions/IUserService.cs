@@ -1,4 +1,5 @@
 ﻿using Core.Entitites;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,10 @@ namespace BLL.Abstractions
         Task<User> GetUserByUsernameAsync(string username);
 
         Task UpdateUserAsync(User user);
+
+        Task SetProfilePicture(string userId, IFormFile file);
+
+        Task SetBackgroundPicture(string userId, IFormFile file);
 
         Task DeleteUserAsync(string userId);
 

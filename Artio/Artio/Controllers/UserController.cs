@@ -137,6 +137,44 @@ namespace Artio.Controllers
             }
         }
 
+        [HttpPut("/profile_picture")]
+        public async Task<IActionResult> SetProfilePicture(IFormFile file)
+        {
+            try
+            {
+                string userId = this._userAccessor.GetUserId();
+
+                await this._userService.SetProfilePicture(userId, file);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("/profile_background")]
+        public async Task<IActionResult> SetProfileBackground(IFormFile file)
+        {
+            try
+            {
+                string userId = this._userAccessor.GetUserId();
+
+                await this._userService.SetBackgroundPicture(userId, file);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
