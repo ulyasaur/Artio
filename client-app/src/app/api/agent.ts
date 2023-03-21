@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Auth } from "../models/auth";
 import AuthResponse from "../models/authResponse";
+import { Photo } from "../models/photo";
 import { Post } from "../models/post";
 import { Profile } from "../models/profile";
 import { User } from "../models/user";
@@ -78,7 +79,26 @@ const Profiles = {
     toggleFollow: (targetId : string) => requests.put(`/user/${targetId}`, targetId),
     getFollowers: (targetId : string) => requests.get<User[]>(`/user/${targetId}/followers`),
     getFollowings: (observerId : string) => requests.get<User[]>(`/user/${observerId}/followings`),
-    updateProfile: (profile: Partial<Profile>) => requests.put(`/user`, profile)
+    updateProfile: (profile: Partial<Profile>) => requests.put(`/user`, profile),
+    uploadProfilePicture: (file: Blob) => {
+        let formData = new FormData();
+        formData.append("File", file);
+        return axios.post<Photo>("/user/profilePicture", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    },
+    // uploadProfilePicture: (file: Blob) => {
+    //     return axios.put<Photo>("/user/profile_picture", file, {
+    //         headers: { "Content-Type": "multipart/form-data" }
+    //     });
+    // },
+    uploadProfileBackground: (file: Blob) => {
+        let formData = new FormData();
+        formData.append("File", file);
+        return axios.post<Photo>("/profileBackground", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    },
 }
 
 const Posts = {

@@ -137,16 +137,19 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpPut("/profile_picture")]
+        [HttpPost("profilePicture")]
         public async Task<IActionResult> SetProfilePicture(IFormFile file)
         {
             try
             {
                 string userId = this._userAccessor.GetUserId();
 
-                await this._userService.SetProfilePicture(userId, file);
+                Photo photo = await this._userService.SetProfilePicture(userId, file);
 
-                return Ok();
+                PhotoViewModel photoViewModel = new PhotoViewModel();
+                this._mapper.Map(photo, photoViewModel);
+
+                return Ok(photoViewModel);
             }
             catch (Exception ex)
             {
@@ -156,16 +159,19 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpPut("/profile_background")]
+        [HttpPost("profileBackground")]
         public async Task<IActionResult> SetProfileBackground(IFormFile file)
         {
             try
             {
                 string userId = this._userAccessor.GetUserId();
 
-                await this._userService.SetBackgroundPicture(userId, file);
+                Photo photo = await this._userService.SetBackgroundPicture(userId, file);
 
-                return Ok();
+                PhotoViewModel photoViewModel = new PhotoViewModel();
+                this._mapper.Map(photo, photoViewModel);
+
+                return Ok(photoViewModel);
             }
             catch (Exception ex)
             {

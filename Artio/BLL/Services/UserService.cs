@@ -197,34 +197,7 @@ namespace BLL.Services
             return user;
         }
 
-        public async Task SetBackgroundPicture(string userId, IFormFile file)
-        {
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new ArgumentNullException("User id must not be null");
-            }
-
-            try
-            {
-                User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(userId));
-                Photo photo = await this._photoAccessor.AddPhoto(file);
-
-                if (user.Image is not null)
-                {
-                    await this._photoAccessor.DeletePhoto(user.Image.Id);
-                }
-
-                user.Image = photo;
-
-                await this._userRepository.UpdateUserAsync(user);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-            }
-        }
-
-        public async Task SetProfilePicture(string userId, IFormFile file)
+        public async Task<Photo> SetBackgroundPicture(string userId, IFormFile file)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -244,10 +217,43 @@ namespace BLL.Services
                 user.Background = photo;
 
                 await this._userRepository.UpdateUserAsync(user);
+
+                return photo;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<Photo> SetProfilePicture(string userId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException("User id must not be null");
+            }
+
+            try
+            {
+                User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(userId));
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (user.Image is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(user.Image.Id);
+                }
+
+                user.Image = photo;
+
+                await this._userRepository.UpdateUserAsync(user);
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 

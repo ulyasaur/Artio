@@ -112,6 +112,8 @@ namespace DAL.Repositories.ef
                         .ThenInclude(o => o.Observer)
                     .Include(u => u.Followings)
                         .ThenInclude(t => t.Target)
+                    .Include(u => u.Image)
+                    .Include(u => u.Background)
                     .Where(filter)
                     .ToListAsync();
             }
@@ -128,6 +130,7 @@ namespace DAL.Repositories.ef
             {
                 return await this._context.UserFollowings
                     .Include(o => o.Observer)
+                        .ThenInclude(o => o.Image)
                     .Where(t => t.TargetId.Equals(targetId))
                     .Select(o => o.Observer)
                     .ToListAsync();
@@ -144,7 +147,8 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.UserFollowings
-                    .Include(o => o.Target)
+                    .Include(t => t.Target)
+                        .ThenInclude(t => t.Image)
                     .Where(t => t.ObserverId.Equals(observerId))
                     .Select(o => o.Target)
                     .ToListAsync();
@@ -168,6 +172,8 @@ namespace DAL.Repositories.ef
                         .ThenInclude(o => o.Observer)
                     .Include(u => u.Followings)
                         .ThenInclude(t => t.Target)
+                    .Include(u => u.Image)
+                    .Include(u => u.Background)
                     .SingleAsync(filter);
             }
             catch (Exception ex)
@@ -183,7 +189,9 @@ namespace DAL.Repositories.ef
             {
                 return await this._context.UserFollowings
                     .Include(t => t.Target)
+                        .ThenInclude(t => t.Image)
                     .Include(o => o.Observer)
+                        .ThenInclude(o => o.Image)
                     .FirstOrDefaultAsync(u => u.ObserverId.Equals(observerId) && u.TargetId.Equals(targetId));
             }
             catch (Exception ex)

@@ -7,6 +7,7 @@ import { store } from "./store";
 export default class ProfileStore {
     profile: Profile | null = null;
     loadingProfile = false;
+    uploading: boolean = false;
     followings: User[] = [];
     followers: User[] = [];
     loadingFollowings: boolean = false;
@@ -42,7 +43,7 @@ export default class ProfileStore {
 
         try {
             const followings = await agent.Profiles.getFollowings(this.profile!.id);
-            
+
             runInAction(() => {
                 this.followings = followings;
                 this.loadingFollowings = false;
@@ -68,9 +69,9 @@ export default class ProfileStore {
             runInAction(() => this.loadingFollowers = false);
         }
     }
-    
+
     updateProfile = async (profile: Partial<Profile>) => {
-        this.loadingProfile = true;
+        this.uploading = true;
 
         try {
             await agent.Profiles.updateProfile(profile);
@@ -80,70 +81,30 @@ export default class ProfileStore {
                     store.userStore.setDisplayName(profile.displayName);
                 }
                 this.profile = { ...this.profile, ...profile as Profile };
-                this.loadingProfile = false;
+                this.uploading = false;
             });
         } catch (error) {
             console.log(error);
-            runInAction(() => this.loadingProfile = false);
+            runInAction(() => this.uploading = false);
         }
     }
-    
-    // uploadPhoto = async (file: Blob) => {
-    //     this.uploading = true;
 
-    //     try {
-    //         const response = await agent.Profiles.uploadPhoto(file);
-    //         const photo = response.data;
-    //         runInAction(() => {
-    //             if (this.profile) {
-    //                 this.profile.photos?.push(photo);
-    //                 if (photo.isMain && store.userStore.user) {
-    //                     store.userStore.setImage(photo.url);
-    //                     this.profile.image = photo.url;
-    //                 }
-    //             }
-    //             this.uploading = false;
-    //         })
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.uploading = false);
-    //     }
-    // }
+    uploadProfilePicture = async (file: Blob) => {
+        this.uploading = true;
 
-    // setMainPhoto = async (photo: Photo) => {
-    //     this.loading = true;
-
-    //     try {
-    //         await agent.Profiles.setMainPhoto(photo.id);
-    //         store.userStore.setImage(photo.url);
-    //         runInAction(() => {
-    //             if (this.profile && this.profile.photos) {
-    //                 this.profile.photos.find(p => p.isMain)!.isMain = false;
-    //                 this.profile.photos.find(p => p.id === photo.id)!.isMain = true;
-    //                 this.profile.image = photo.url;
-    //             }
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
-
-    // deletePhoto = async (photo: Photo) => {
-    //     this.loading = true;
-
-    //     try {
-    //         await agent.Profiles.deletePhoto(photo.id);
-    //         runInAction(() => {
-    //             if (this.profile) {
-    //                 this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id);
-    //             }
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
+        try {
+            const response = await agent.Profiles.uploadProfilePicture(file);
+            const photo = response.data;
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.image = photo;
+                    store.userStore.setImage(photo);
+                }
+                this.uploading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.uploading = false);
+        }
+    }
 }

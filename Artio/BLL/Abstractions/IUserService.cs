@@ -21,9 +21,9 @@ namespace BLL.Abstractions
 
         Task UpdateUserAsync(User user);
 
-        Task SetProfilePicture(string userId, IFormFile file);
+        Task<Photo> SetProfilePicture(string userId, IFormFile file);
 
-        Task SetBackgroundPicture(string userId, IFormFile file);
+        Task<Photo> SetBackgroundPicture(string userId, IFormFile file);
 
         Task DeleteUserAsync(string userId);
 
