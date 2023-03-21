@@ -11,15 +11,18 @@ interface Props {
     uploadPhoto: (file: Blob) => void;
     open: boolean;
     handleClose: (open: boolean) => void;
+    cropperProps: {}
 }
 
-export default observer(function PhotoUploadWidget({ loading, uploadPhoto, open, handleClose }: Props) {
+export default observer(function PhotoUploadWidget({ loading, uploadPhoto, open, handleClose, cropperProps }: Props) {
     const [files, setFiles] = useState<any>([]);
     const [cropper, setCropper] = useState<Cropper>();
 
     function onCrop() {
         if (cropper) {
             cropper.getCroppedCanvas().toBlob(blob => uploadPhoto(blob!));
+            setFiles([]);
+            handleClose(false);
         }
     }
 
@@ -33,7 +36,13 @@ export default observer(function PhotoUploadWidget({ loading, uploadPhoto, open,
 
     return (
         <ThemeProvider theme={theme}>
-            <Dialog fullWidth open={open} onClose={() => handleClose(false)} >
+            <Dialog
+                fullWidth
+                open={open}
+                onClose={() => {
+                    setFiles([]);
+                    handleClose(false);
+                }} >
                 <Card>
                     <CardHeader
                         sx={{
@@ -57,7 +66,7 @@ export default observer(function PhotoUploadWidget({ loading, uploadPhoto, open,
                             <Grid sx={{ mt: "5vh" }} xs={5.9}>
                                 <Typography color="hotpink" sx={{ marginBottom: "2vh" }}>Resize image</Typography>
                                 {files && files.length > 0 &&
-                                    <PhotoCropper setCropper={setCropper} imagePreview={files[0].preview} />
+                                    <PhotoCropper setCropper={setCropper} imagePreview={files[0].preview} props={cropperProps} />
                                 }
                             </Grid>
                             <Grid xs={0.2} />

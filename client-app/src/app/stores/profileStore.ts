@@ -107,4 +107,22 @@ export default class ProfileStore {
             runInAction(() => this.uploading = false);
         }
     }
+
+    uploadBackgroundPicture = async (file: Blob) => {
+        this.uploading = true;
+
+        try {
+            const response = await agent.Profiles.uploadProfileBackground(file);
+            const photo = response.data;
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.background = photo;
+                }
+                this.uploading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.uploading = false);
+        }
+    }
 }

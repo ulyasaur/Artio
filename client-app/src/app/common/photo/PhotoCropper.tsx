@@ -5,20 +5,21 @@ import { observer } from "mobx-react-lite";
 interface Props {
     imagePreview: string;
     setCropper: (cropper : Cropper) => void;
+    props?: {}
 }
 
-export default observer(function PhotoCropper({imagePreview, setCropper}: Props) {
+export default observer(function PhotoCropper({imagePreview, setCropper, props}: Props) {
     return (
         <Cropper
             src={imagePreview}
             style={{height: 200, width: "100%"}}
-            initialAspectRatio={1}
-            aspectRatio={1}
+            zoomable
             preview=".img-preview"
             guides={false}
             viewMode={1}
             autoCropArea={1}
             background={false}
+            {...props}
             onInitialized={cropper => setCropper(cropper)}
         />
     );

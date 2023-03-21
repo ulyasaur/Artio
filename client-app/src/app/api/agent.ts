@@ -87,15 +87,10 @@ const Profiles = {
             headers: { "Content-Type": "multipart/form-data" }
         });
     },
-    // uploadProfilePicture: (file: Blob) => {
-    //     return axios.put<Photo>("/user/profile_picture", file, {
-    //         headers: { "Content-Type": "multipart/form-data" }
-    //     });
-    // },
     uploadProfileBackground: (file: Blob) => {
         let formData = new FormData();
         formData.append("File", file);
-        return axios.post<Photo>("/profileBackground", formData, {
+        return axios.post<Photo>("/user/profileBackground", formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });
     },

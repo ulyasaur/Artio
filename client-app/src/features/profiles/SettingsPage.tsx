@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { Avatar, Badge, Button, Card, CardContent, CardMedia, Chip, Divider, Grid, IconButton, Typography } from "@mui/material";
+import { Avatar, Badge, Card, CardContent, CardMedia, Chip, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/common/themes/theme";
@@ -22,10 +22,12 @@ export default observer(function SettingsPage() {
         profile,
         updateProfile,
         uploading,
-        uploadProfilePicture } = profileStore;
+        uploadProfilePicture,
+        uploadBackgroundPicture } = profileStore;
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [uploadPhotoFunc, setUploadFunc] = useState<(file: Blob) => void>(uploadProfilePicture);
+    const [uploadPhoto, setUpload] = useState<string>("profile");
+    const [cropperProps, setCropperProps] = useState<{}>();
 
     useEffect(() => {
         loadProfile(currentUser?.username!);
@@ -51,6 +53,22 @@ export default observer(function SettingsPage() {
                     width: "75vw"
                 }}
             >
+                <IconButton
+                    sx={{ 
+                        color: "white",
+                        position: "absolute",
+                        zIndex: "999"
+                    }}
+                    onClick={() => {
+                        setUpload("background");
+                        setCropperProps({
+                            initialAspectRatio: 1,
+                            aspectRatio: 2.5
+                        });
+                        setOpenDialog(true);
+                    }}>
+                    <PhotoCamera />
+                </IconButton>
 
                 <Box
                     sx={{
@@ -64,6 +82,11 @@ export default observer(function SettingsPage() {
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                         badgeContent={
                             <IconButton sx={{ color: "white" }} onClick={() => {
+                                setUpload("profile");
+                                setCropperProps({
+                                    initialAspectRatio: 1,
+                                    aspectRatio: 1
+                                });
                                 setOpenDialog(true);
                             }}>
                                 <PhotoCamera />
@@ -171,9 +194,10 @@ export default observer(function SettingsPage() {
 
             <PhotoUploadWidget
                 loading={uploading}
-                uploadPhoto={uploadProfilePicture}
+                uploadPhoto={uploadPhoto === "profile" ? uploadProfilePicture : uploadBackgroundPicture}
                 open={openDialog}
                 handleClose={setOpenDialog}
+                cropperProps={cropperProps!}
             />
         </ThemeProvider>
     );
