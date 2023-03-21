@@ -2,6 +2,7 @@ import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
 import { Auth } from "../models/auth";
+import { Photo } from "../models/photo";
 import { User } from "../models/user";
 import { router } from "../router/router";
 import { store } from "./store";
@@ -81,6 +82,18 @@ export default class UserStore {
             });
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    setDisplayName = (displayName: string) => {
+        if (this.currentUser) {
+            this.currentUser.displayName = displayName;
+        }
+    }
+
+    setImage = (photo: Photo) => {
+        if (this.currentUser) {
+            this.currentUser.image = photo;
         }
     }
 

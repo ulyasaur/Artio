@@ -62,7 +62,11 @@ namespace DAL.Repositories.ef
         {
             try
             {
-                return await this._context.Comments.Include(c => c.User).Where(filter).ToListAsync();
+                return await this._context.Comments
+                    .Include(c => c.User)
+                        .ThenInclude(u => u.Image)
+                    .Where(filter)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -75,7 +79,10 @@ namespace DAL.Repositories.ef
         {
             try
             {
-                return await this._context.Comments.Include(c => c.User).SingleAsync(filter);
+                return await this._context.Comments
+                    .Include(c => c.User)
+                        .ThenInclude(u => u.Image)
+                    .SingleAsync(filter);
             }
             catch (Exception ex)
             {

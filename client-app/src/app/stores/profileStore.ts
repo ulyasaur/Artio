@@ -7,6 +7,7 @@ import { store } from "./store";
 export default class ProfileStore {
     profile: Profile | null = null;
     loadingProfile = false;
+    uploading: boolean = false;
     followings: User[] = [];
     followers: User[] = [];
     loadingFollowings: boolean = false;
@@ -42,7 +43,7 @@ export default class ProfileStore {
 
         try {
             const followings = await agent.Profiles.getFollowings(this.profile!.id);
-            
+
             runInAction(() => {
                 this.followings = followings;
                 this.loadingFollowings = false;
@@ -68,82 +69,60 @@ export default class ProfileStore {
             runInAction(() => this.loadingFollowers = false);
         }
     }
-    
-    // uploadPhoto = async (file: Blob) => {
-    //     this.uploading = true;
 
-    //     try {
-    //         const response = await agent.Profiles.uploadPhoto(file);
-    //         const photo = response.data;
-    //         runInAction(() => {
-    //             if (this.profile) {
-    //                 this.profile.photos?.push(photo);
-    //                 if (photo.isMain && store.userStore.user) {
-    //                     store.userStore.setImage(photo.url);
-    //                     this.profile.image = photo.url;
-    //                 }
-    //             }
-    //             this.uploading = false;
-    //         })
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.uploading = false);
-    //     }
-    // }
+    updateProfile = async (profile: Partial<Profile>) => {
+        this.uploading = true;
 
-    // setMainPhoto = async (photo: Photo) => {
-    //     this.loading = true;
+        try {
+            await agent.Profiles.updateProfile(profile);
+            runInAction(() => {
+                if (profile.displayName && profile.displayName !==
+                    store.userStore.currentUser?.displayName) {
+                    store.userStore.setDisplayName(profile.displayName);
+                }
+                this.profile = { ...this.profile, ...profile as Profile };
+                this.uploading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.uploading = false);
+        }
+    }
 
-    //     try {
-    //         await agent.Profiles.setMainPhoto(photo.id);
-    //         store.userStore.setImage(photo.url);
-    //         runInAction(() => {
-    //             if (this.profile && this.profile.photos) {
-    //                 this.profile.photos.find(p => p.isMain)!.isMain = false;
-    //                 this.profile.photos.find(p => p.id === photo.id)!.isMain = true;
-    //                 this.profile.image = photo.url;
-    //             }
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
+    uploadProfilePicture = async (file: Blob) => {
+        this.uploading = true;
 
-    // deletePhoto = async (photo: Photo) => {
-    //     this.loading = true;
+        try {
+            const response = await agent.Profiles.uploadProfilePicture(file);
+            const photo = response.data;
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.image = photo;
+                    store.userStore.setImage(photo);
+                }
+                this.uploading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.uploading = false);
+        }
+    }
 
-    //     try {
-    //         await agent.Profiles.deletePhoto(photo.id);
-    //         runInAction(() => {
-    //             if (this.profile) {
-    //                 this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id);
-    //             }
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
+    uploadBackgroundPicture = async (file: Blob) => {
+        this.uploading = true;
 
-    // updateProfile = async (profile: Partial<Profile>) => {
-    //     this.loading = true;
-
-    //     try {
-    //         await agent.Profiles.updateProfile(profile);
-    //         runInAction(() => {
-    //             if (profile.displayName && profile.displayName !==
-    //                 store.userStore.user?.displayName) {
-    //                 store.userStore.setDisplayName(profile.displayName);
-    //             }
-    //             this.profile = { ...this.profile, ...profile as Profile };
-    //             this.loading = false;
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //         runInAction(() => this.loading = false);
-    //     }
-    // }
+        try {
+            const response = await agent.Profiles.uploadProfileBackground(file);
+            const photo = response.data;
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.background = photo;
+                }
+                this.uploading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.uploading = false);
+        }
+    }
 }

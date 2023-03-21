@@ -10,6 +10,7 @@ import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
 import FollowButton from "../followers/FollowButton";
 import { Link as RouterLink } from "react-router-dom";
+import { router } from "../../app/router/router";
 
 interface Props {
     profile: Profile;
@@ -142,14 +143,10 @@ export default observer(function ProfileHeader({ profile }: Props) {
                             {(currentUser?.id === profile.id)
                                 ? <Button
                                     sx={{
-                                        width: "100%",
-                                        color: "grey",
-                                        borderColor: "grey",
-                                        '&:hover': {
-                                            borderColor: "grey"
-                                        }
+                                        width: "100%"
                                     }}
                                     variant="outlined"
+                                    onClick={() => router.navigate("/settings")}
                                 >
                                     Edit profile
                                 </Button>

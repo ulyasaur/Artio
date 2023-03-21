@@ -4,9 +4,12 @@ import { useField } from "formik";
 interface Props {
     placeholder: string;
     name: string;
+    defaultValue?: string;
     label?: string;
     type?: string;
     required?: boolean;
+    multiline?: boolean;
+    minRows?: number;
 }
 
 export default function FormTextField(props: Props) {
@@ -16,7 +19,7 @@ export default function FormTextField(props: Props) {
         <>
             <TextField
                 fullWidth
-                error={meta.touched && !!meta.error} //&& meta.invalid
+                error={meta.touched && !!meta.error}
                 helperText={meta.touched && meta.error}
                 {...field}
                 {...props}

@@ -5,6 +5,7 @@ import HomePage from "../../features/home/HomePage";
 import FeedPage from "../../features/posts/FeedPage";
 import PostPage from "../../features/posts/PostPage";
 import ProfilePage from "../../features/profiles/ProfilePage";
+import SettingsPage from "../../features/profiles/SettingsPage";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
 
@@ -17,6 +18,7 @@ export const routes: RouteObject[] = [
                 element: <RequireAuth />, children: [
                     { path: "feed", element: <FeedPage /> },
                     { path: "profile/:username", element: <ProfilePage /> },
+                    { path: "settings", element: <SettingsPage /> },
                     { path: "post/:postId", element: <PostPage /> },
                     { path: ":username/followers", element: <FollowList predicate="followers" /> },
                     { path: ":username/followings", element: <FollowList predicate="followings" /> },

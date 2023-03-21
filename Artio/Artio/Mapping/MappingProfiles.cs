@@ -25,7 +25,7 @@ namespace Artio.Mapping
                 .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count))
                 .ForMember(d => d.FollowingsCount, o => o.MapFrom(s => s.Followings.Count));
 
-            CreateMap<User, UserUpdateViewModel>();
+            CreateMap<UserUpdateViewModel, User>();
 
             CreateMap<User, UserViewModel>();
 

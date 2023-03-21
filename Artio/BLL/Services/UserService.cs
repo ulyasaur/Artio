@@ -2,6 +2,8 @@
 using BLL.Validation;
 using Core.Entitites;
 using DAL.Abstractions;
+using DAL.Photos.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,14 +19,20 @@ namespace BLL.Services
 
         private readonly ITagRepository _tagRepository;
 
+        private readonly IPhotoAccessor _photoAccessor;
+
         private readonly IValidator<User> _validator;
 
         private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, ITagRepository tagRepository, ILogger<UserService> logger)
+        public UserService(IUserRepository userRepository, 
+            ITagRepository tagRepository, 
+            IPhotoAccessor photoAccessor, 
+            ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _tagRepository = tagRepository;
+            _photoAccessor = photoAccessor;
             _logger = logger;
 
             _validator = new UserValidator();
@@ -189,6 +197,66 @@ namespace BLL.Services
             return user;
         }
 
+        public async Task<Photo> SetBackgroundPicture(string userId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException("User id must not be null");
+            }
+
+            try
+            {
+                User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(userId));
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (user.Background is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(user.Background.Id);
+                }
+
+                user.Background = photo;
+
+                await this._userRepository.UpdateUserAsync(user);
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<Photo> SetProfilePicture(string userId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException("User id must not be null");
+            }
+
+            try
+            {
+                User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(userId));
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (user.Image is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(user.Image.Id);
+                }
+
+                user.Image = photo;
+
+                await this._userRepository.UpdateUserAsync(user);
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task ToggleFollowAsync(string observerId, string targetId)
         {
             if (string.IsNullOrEmpty(targetId))
@@ -231,16 +299,14 @@ namespace BLL.Services
                 throw new ArgumentNullException("User id must not be null");
             }
 
-            if (!this._validator.Validate(user))
-            {
-                throw new ArgumentException("User is not valid");
-            }
-
             try
             {
                 User existingUser = await this._userRepository.GetUserAsync(x => x.Id.Equals(user.Id));
 
-                await this._userRepository.UpdateUserAsync(user);
+                existingUser.DisplayName = user.DisplayName;
+                existingUser.Bio = user.Bio;
+
+                await this._userRepository.UpdateUserAsync(existingUser);
             }
             catch (Exception ex)
             {

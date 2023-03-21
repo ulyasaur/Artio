@@ -94,6 +94,7 @@ namespace DAL.Repositories.ef
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)
+                        .ThenInclude(u => u.Image)
                     .Include(p => p.Comments)
                     .Include(p => p.Likes)
                     .Where(filter)
@@ -114,6 +115,7 @@ namespace DAL.Repositories.ef
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)
+                        .ThenInclude(u => u.Image)
                     .Include(p => p.Comments)
                     .Include(p => p.Likes)
                     .SingleAsync(filter);
