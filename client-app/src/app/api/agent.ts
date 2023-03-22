@@ -105,16 +105,13 @@ const Posts = {
     addPost: (post: PostFormValues) => {
         let formData = new FormData();
         formData.append("Description", post.description);
-        // for (let i = 0; i < post.tags.length; i++) {
-        //     formData.append(`tags[${i}][tagId]`, post.tags[i].id);
-        //     formData.append(`tags[${i}][tagName]`, post.tags[i].tagName);
-        // }
         formData.append("Tags", JSON.stringify(post.tags));
         formData.append("Image", post.image!);
         return axios.post("/post", formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });
     },
+    updatePost: (post: PostFormValues) => requests.put(`/post/${post.postId}`, post)
 }
 
 const agent = {

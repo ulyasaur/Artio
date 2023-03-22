@@ -248,28 +248,20 @@ namespace BLL.Services
 
         public async Task UpdatePostAsync(PostDto postDto)
         {
-            Post post = new Post();
-            this._mapper.Map(postDto, post);
-
-            if (post.PostId <= 0)
+            if (postDto.PostId <= 0)
             {
                 throw new ArgumentNullException("Post id must be greater than 0");
-            }
-
-            if (!this._validator.Validate(post))
-            {
-                throw new ArgumentException("Post is not valid");
             }
 
             try
             {
                 var tags = await this._tagRepository.GetAllTagsAsync(t => postDto.Tags.Select(t => t.TagId).Contains(t.TagId));
 
-                post.PostTags = tags.Select(t => new PostTag { PostId = post.PostId, TagId = t.TagId }).ToList();
+                Post existingPost = await this._postRepository.GetPostAsync(x => x.PostId == postDto.PostId);
+                existingPost.Description = postDto.Description;
+                existingPost.PostTags = tags.Select(t => new PostTag { PostId = postDto.PostId, TagId = t.TagId }).ToList();                
 
-                Post existingPost = await this._postRepository.GetPostAsync(x => x.PostId == post.PostId);
-
-                await this._postRepository.UpdatePostAsync(post);
+                await this._postRepository.UpdatePostAsync(existingPost);
             }
             catch (Exception ex)
             {

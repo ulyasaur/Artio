@@ -170,13 +170,13 @@ namespace Artio.Controllers
         }
 
         [HttpPut("{postId}")]
-        public async Task<IActionResult> EditPost(int postId, PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> EditPost(int postId, PostUpdateViewModel postUpdateViewModel)
         {
             try
             {
                 PostDto post = new PostDto();
 
-                this._mapper.Map(postCreateViewModel, post);
+                this._mapper.Map(postUpdateViewModel, post);
                 post.PostId = postId;
 
                 await this._postService.UpdatePostAsync(post);

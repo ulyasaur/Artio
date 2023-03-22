@@ -5,30 +5,24 @@ import { Formik, ErrorMessage } from "formik";
 import { useStore } from "../../app/stores/store";
 import { PostFormValues } from "../../app/models/post";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Box, Card, CardContent, CardHeader, Chip, Divider, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, CardMedia, Chip, Divider, Grid, ThemeProvider, Typography } from "@mui/material";
 import { theme } from "../../app/common/themes/theme";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
 import PhotoDropzone from "../../app/common/photo/PhotoDropzone";
 import PhotoCropper from "../../app/common/photo/PhotoCropper";
 import { toast } from "react-toastify";
+import placeholder from "../../assets/placeholder.png";
 
 export default observer(function ActivityForm() {
     const { postStore } = useStore();
-    const { createPost, loadPost, loadingPosts, post } = postStore;
-    const { postId } = useParams();
+    const { createPost, updatePost, loadPost, loadingPosts, post } = postStore;
+    const { postId } = useParams<string>();
     const navigate = useNavigate();
 
     const [editingPost, setEditingPost] = useState<PostFormValues>(new PostFormValues());
     const [files, setFiles] = useState<any>([]);
     const [cropper, setCropper] = useState<Cropper>();
-
-    // function onCrop() {
-    //     if (cropper) {
-    //         cropper.getCroppedCanvas().toBlob(blob => setImage(blob));
-    //         setFiles([]);
-    //     }
-    // }
 
     useEffect(() => {
         return () => {
@@ -38,26 +32,21 @@ export default observer(function ActivityForm() {
         }
     }, [files])
 
-    // useEffect(() => {
-    //     if (id) {
-    //         loadPost(id);
-    //         if (post) {
-    //             setEditingPost(new PostFormValues(post.postId, post.image, post.description, post.tags));
-    //         }
-    //     }
-    // }, [id, loadPost]);
+    useEffect(() => {
+        if (postId) {
+            loadPost(postId);
+            if (post) {
+                editingPost.postId = post.postId;
+                editingPost.description = post.description;
+                editingPost.tags = post.tags;
+            }
+        }
+    }, [postId, loadPost]);
 
     const handleFormSubmit = async (description: string) => {
         if (!editingPost.postId) {
             if (cropper && files && files.length > 0) {
                 const canvas = cropper.getCroppedCanvas();
-                // const blob = await new Promise(resolve => canvas.toBlob(resolve));
-
-                // canvas.toBlob(blob => {
-                //     console.log(blob)
-                //     setImage(blob)
-                // });
-                // setEditingPost(new PostFormValues(undefined, blob as Blob, description, []))
                 editingPost.image = await new Promise(resolve => canvas.toBlob(resolve));
                 editingPost.description = description;
                 editingPost.tags = [];
@@ -67,10 +56,12 @@ export default observer(function ActivityForm() {
             } else {
                 toast.error("Add photo firt");
             }
+        } else {
+            editingPost.description = description;
+            editingPost.tags = post!.tags;
+            updatePost(editingPost);
+            navigate("/");
         }
-        // } else {
-        //     updatePost(post).then(() => navigate(`/activities/${activity.id}`));
-        // }
     }
 
     if (loadingPosts) {
@@ -97,14 +88,22 @@ export default observer(function ActivityForm() {
                         fontWeight: "bold"
                     }}
                 />
-                <CardContent>
-                    {files && files.length > 0
-                        ? <PhotoCropper setCropper={setCropper} imagePreview={files[0].preview} />
-                        : <PhotoDropzone setFiles={setFiles} />
-                    }
-                </CardContent>
 
-                <Divider variant="middle">
+                {
+                    postId && post
+                        ? <CardMedia
+                            component="img"
+                            image={post.image.url ? post.image.url : placeholder}
+                        />
+                        : <CardContent>
+                            {files && files.length > 0
+                                ? <PhotoCropper setCropper={setCropper} imagePreview={files[0].preview} />
+                                : <PhotoDropzone setFiles={setFiles} />
+                            }
+                        </CardContent>
+                }
+
+                <Divider variant="middle" sx={{mt: "2vh"}}>
                     <Typography
                         sx={{
                             color: "hotpink"

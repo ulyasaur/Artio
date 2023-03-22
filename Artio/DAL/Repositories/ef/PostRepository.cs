@@ -20,10 +20,11 @@ namespace DAL.Repositories.ef
 
         private readonly IMapper _mapper;
 
-        public PostRepository(ApplicationContext context, ILogger<PostRepository> logger)
+        public PostRepository(ApplicationContext context, ILogger<PostRepository> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task AddPostAsync(Post post)

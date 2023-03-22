@@ -5,7 +5,7 @@ import { Post, PostFormValues } from "../models/post";
 import { store } from "./store";
 
 export default class PostStore {
-    userPosts : Post[] | null = null;
+    userPosts: Post[] | null = null;
     posts: Post[] | null = null;
     post: Post | null = null;
     loadingPosts = false;
@@ -51,9 +51,9 @@ export default class PostStore {
     loadPosts = async (predicate: string) => {
         this.loadingPosts = true;
         try {
-            let posts : Post[]; 
+            let posts: Post[];
 
-            if(predicate === "tags") {
+            if (predicate === "tags") {
                 posts = await agent.Posts.getPostsByUserTags();
             } else {
                 posts = await agent.Posts.getPostsByFollowings();
@@ -69,7 +69,7 @@ export default class PostStore {
         }
     }
 
-    createPost = async (post:PostFormValues) => {
+    createPost = async (post: PostFormValues) => {
         this.loadingPosts = true;
         try {
             await agent.Posts.addPost(post);
@@ -82,16 +82,29 @@ export default class PostStore {
         }
     }
 
-    toggleLike = async (post:Post) => {
+    updatePost = async (post: PostFormValues) => {
+        this.loadingPosts = true;
+        try {
+            await agent.Posts.updatePost(post);
+            runInAction(() => {
+                this.loadingPosts = false
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingPosts = false);
+        }
+    }
+
+    toggleLike = async (post: Post) => {
         try {
             await agent.Posts.toggleLike(post.postId.toString());
             const userId = store.userStore.currentUser?.id;
 
             runInAction(() => {
-                if(this.isLiked(post)) {
+                if (this.isLiked(post)) {
                     post.likes = post.likes.filter(l => l.userId !== userId);
                 }
-                else {                    
+                else {
                     post.likes.push(new Like(post.postId, userId!));
                 }
             });

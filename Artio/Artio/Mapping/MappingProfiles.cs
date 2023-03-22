@@ -21,6 +21,8 @@ namespace Artio.Mapping
 
             CreateMap<PostCreateViewModel, PostDto>();
 
+            CreateMap<PostUpdateViewModel, PostDto>();
+
             CreateMap<Tag, TagViewModel>();
 
             CreateMap<User, UserProfileViewModel>()
