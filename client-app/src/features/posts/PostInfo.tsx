@@ -29,7 +29,7 @@ interface Props {
 
 export default observer(function PostInfo({ post, elevation }: Props) {
     const { postStore, userStore } = useStore();
-    const { isLiked, toggleLike } = postStore;
+    const { isLiked, toggleLike, deletePost } = postStore;
     const { currentUser } = userStore;
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -80,7 +80,10 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                                         handleClose();
                                         router.navigate(`/post/update/${post.postId}`)
                                         }}>Edit</MenuItem>
-                                    <MenuItem onClick={handleClose}>Delete</MenuItem>
+                                    <MenuItem onClick={() => {
+                                        handleClose();
+                                        deletePost(post.postId)
+                                        }}>Delete</MenuItem>
                                 </Menu>
                             </>
                             : <FollowButton user={post.user} />

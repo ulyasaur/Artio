@@ -48,7 +48,7 @@ namespace BLL.Services
             _validator = new PostValidator();
         }
 
-        public async Task AddPostAsync(PostDto postDto)
+        public async Task<Post> AddPostAsync(PostDto postDto)
         {
             Post post = new Post();
             post.UserId = postDto.UserId;
@@ -71,12 +71,16 @@ namespace BLL.Services
                     post.PostTags.Add(new PostTag { TagId = tag.TagId });
                 }
 
-                await this._postRepository.AddPostAsync(post);                
+                await this._postRepository.AddPostAsync(post);
+
+                Post addedPost = await this._postRepository.GetPostAsync(p => p.Image.Id == post.Image.Id);
+                return addedPost;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex.Message);                
             }
+            return null;
         }
 
         public async Task AddTagToPostAsync(int postId, int tagId)
@@ -261,7 +265,7 @@ namespace BLL.Services
                 existingPost.Description = postDto.Description;
                 existingPost.PostTags = tags.Select(t => new PostTag { PostId = postDto.PostId, TagId = t.TagId }).ToList();                
 
-                await this._postRepository.UpdatePostAsync(existingPost);
+                await this._postRepository.UpdatePostAsync(existingPost);                
             }
             catch (Exception ex)
             {

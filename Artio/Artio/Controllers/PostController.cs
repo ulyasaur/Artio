@@ -139,9 +139,11 @@ namespace Artio.Controllers
                 post.UserId = this._userAccessor.GetUserId();
                 post.CreatedAt = DateTimeOffset.UtcNow;
 
-                await this._postService.AddPostAsync(post);
+                Post addedPost = await this._postService.AddPostAsync(post);
+                PostViewModel postViewModel= new PostViewModel();
+                this._mapper.Map(addedPost, postViewModel);
 
-                return Ok();
+                return Ok(postViewModel);
             }
             catch (Exception ex)
             {

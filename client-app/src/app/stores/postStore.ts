@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Like } from "../models/like";
 import { Post, PostFormValues } from "../models/post";
+import { router } from "../router/router";
 import { store } from "./store";
 
 export default class PostStore {
@@ -20,7 +21,7 @@ export default class PostStore {
             const posts = await agent.Posts.getUserPosts(id);
             runInAction(() => {
                 this.userPosts = posts;
-                this.loadingPosts = false
+                this.loadingPosts = false;
             });
         } catch (error) {
             console.log(error);
@@ -40,7 +41,7 @@ export default class PostStore {
             const post = await agent.Posts.getPost(postId);
             runInAction(() => {
                 this.post = post;
-                this.loadingPosts = false
+                this.loadingPosts = false;
             });
         } catch (error) {
             console.log(error);
@@ -61,7 +62,7 @@ export default class PostStore {
 
             runInAction(() => {
                 this.posts = posts;
-                this.loadingPosts = false
+                this.loadingPosts = false;
             });
         } catch (error) {
             console.log(error);
@@ -72,9 +73,13 @@ export default class PostStore {
     createPost = async (post: PostFormValues) => {
         this.loadingPosts = true;
         try {
-            await agent.Posts.addPost(post);
+            const addedPost = (await agent.Posts.addPost(post)).data;
             runInAction(() => {
-                this.loadingPosts = false
+                this.post = addedPost;
+                if (store.postStore.userPosts) {
+                    store.postStore.userPosts.unshift(addedPost);
+                }
+                this.loadingPosts = false;
             });
         } catch (error) {
             console.log(error);
@@ -87,7 +92,25 @@ export default class PostStore {
         try {
             await agent.Posts.updatePost(post);
             runInAction(() => {
-                this.loadingPosts = false
+                this.loadingPosts = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingPosts = false);
+        }
+    }
+
+    deletePost = async (postId: number) => {
+        this.loadingPosts = true;
+        try {
+            await agent.Posts.deletePost(postId);
+            router.navigate("/");
+            runInAction(() => {
+                if (store.postStore.userPosts) {
+                    store.postStore.userPosts = store.postStore.userPosts.filter(p => p.postId !== postId);
+                }
+                this.post = null;
+                this.loadingPosts = false;
             });
         } catch (error) {
             console.log(error);

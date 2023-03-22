@@ -19,7 +19,7 @@ namespace BLL.Abstractions
 
         Task<Post> GetPostByIdAsync(int postId);
 
-        Task AddPostAsync(PostDto postDto);
+        Task<Post> AddPostAsync(PostDto postDto);
 
         Task UpdatePostAsync(PostDto postDto);
 
