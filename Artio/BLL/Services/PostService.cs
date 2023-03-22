@@ -4,6 +4,7 @@ using BLL.Dtos;
 using BLL.Validation;
 using Core.Entitites;
 using DAL.Abstractions;
+using DAL.Photos.Abstractions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,18 +22,26 @@ namespace BLL.Services
 
         private readonly ITagRepository _tagRepository;
 
+        private readonly IPhotoAccessor _photoAccessor;
+
         private readonly IMapper _mapper;
 
         private readonly IValidator<Post> _validator;
 
         private readonly ILogger<PostService> _logger;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, IMapper mapper,
-            ITagRepository tagRepository, ILogger<PostService> logger)
+        public PostService(
+            IPostRepository postRepository, 
+            IUserRepository userRepository, 
+            ITagRepository tagRepository, 
+            IPhotoAccessor photoAccessor, 
+            IMapper mapper, 
+            ILogger<PostService> logger)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _tagRepository = tagRepository;
+            _photoAccessor = photoAccessor;
             _mapper = mapper;
             _logger = logger;
 
@@ -42,7 +51,9 @@ namespace BLL.Services
         public async Task AddPostAsync(PostDto postDto)
         {
             Post post = new Post();
-            this._mapper.Map(postDto, post);
+            post.UserId = postDto.UserId;
+            post.CreatedAt = postDto.CreatedAt;
+            post.Description = postDto.Description;
 
             if (!this._validator.Validate(post))
             {
@@ -51,11 +62,13 @@ namespace BLL.Services
 
             try
             {
-                foreach (var tagId in postDto.Tags)
-                {
-                    Tag existingTag = await this._tagRepository.GetTagAsync(x => x.TagId == tagId);
+                post.Image = await this._photoAccessor.AddPhoto(postDto.Image);
 
-                    post.PostTags.Add(new PostTag { TagId = tagId });
+                foreach (var tag in postDto.Tags)
+                {
+                    Tag existingTag = await this._tagRepository.GetTagAsync(x => x.TagId == tag.TagId);
+
+                    post.PostTags.Add(new PostTag { TagId = tag.TagId });
                 }
 
                 await this._postRepository.AddPostAsync(post);                
@@ -174,7 +187,7 @@ namespace BLL.Services
 
                 var followings = user.Followings.Select(x => x.TargetId);
 
-                posts = await this._postRepository.GetAllPostsAsync(p => followings.Contains(p.UserId));
+                posts = (await this._postRepository.GetAllPostsAsync(p => followings.Contains(p.UserId))).OrderByDescending(p => p.CreatedAt).ToList();
             }
             catch (Exception ex)
             {
@@ -200,7 +213,7 @@ namespace BLL.Services
                 var tags = user.UserTags.Select(t => t.TagId);
 
                 //posts = await this._postRepository.GetAllPostsAsync(p => tags.Any(t => p.PostTags.Any(pt => pt.TagId == t)));
-                posts = await this._postRepository.GetAllPostsAsync(p => p.PostTags.Any(pt => tags.Contains(pt.TagId)));
+                posts = (await this._postRepository.GetAllPostsAsync(p => p.PostTags.Any(pt => tags.Contains(pt.TagId)))).OrderByDescending(p => p.CreatedAt).ToList();
             }
             catch (Exception ex)
             {
@@ -223,7 +236,7 @@ namespace BLL.Services
             {
                 User user = await this._userRepository.GetUserAsync(x => x.Id.Equals(userId));
 
-                posts = await this._postRepository.GetAllPostsAsync(x => x.User.Id.Equals(userId));
+                posts = (await this._postRepository.GetAllPostsAsync(x => x.User.Id.Equals(userId))).OrderByDescending(p => p.CreatedAt).ToList();
             }
             catch (Exception ex)
             {
@@ -250,7 +263,7 @@ namespace BLL.Services
 
             try
             {
-                var tags = await this._tagRepository.GetAllTagsAsync(t => postDto.Tags.Contains(t.TagId));
+                var tags = await this._tagRepository.GetAllTagsAsync(t => postDto.Tags.Select(t => t.TagId).Contains(t.TagId));
 
                 post.PostTags = tags.Select(t => new PostTag { PostId = post.PostId, TagId = t.TagId }).ToList();
 

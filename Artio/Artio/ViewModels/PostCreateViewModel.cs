@@ -2,10 +2,10 @@
 {
     public class PostCreateViewModel
     {
-        public PhotoViewModel Image { get; set; }
+        public IFormFile Image { get; set; }
 
         public string Description { get; set; }
 
-        public List<int> Tags { get; set; }
+        public List<TagViewModel> Tags { get; set; }
     }
 }

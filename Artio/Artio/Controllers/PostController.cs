@@ -128,7 +128,7 @@ namespace Artio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost(PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> AddPost([FromForm]PostCreateViewModel postCreateViewModel)
         {
             try
             {

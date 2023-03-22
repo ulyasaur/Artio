@@ -91,6 +91,7 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.Posts
+                    .Include(p => p.Image)
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)
@@ -112,6 +113,7 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.Posts
+                    .Include(p => p.Image)
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)

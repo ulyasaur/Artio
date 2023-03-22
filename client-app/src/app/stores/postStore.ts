@@ -1,10 +1,11 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Like } from "../models/like";
-import { Post } from "../models/post";
+import { Post, PostFormValues } from "../models/post";
 import { store } from "./store";
 
 export default class PostStore {
+    userPosts : Post[] | null = null;
     posts: Post[] | null = null;
     post: Post | null = null;
     loadingPosts = false;
@@ -18,7 +19,7 @@ export default class PostStore {
         try {
             const posts = await agent.Posts.getUserPosts(id);
             runInAction(() => {
-                this.posts = posts;
+                this.userPosts = posts;
                 this.loadingPosts = false
             });
         } catch (error) {
@@ -60,6 +61,19 @@ export default class PostStore {
 
             runInAction(() => {
                 this.posts = posts;
+                this.loadingPosts = false
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingPosts = false);
+        }
+    }
+
+    createPost = async (post:PostFormValues) => {
+        this.loadingPosts = true;
+        try {
+            await agent.Posts.addPost(post);
+            runInAction(() => {
                 this.loadingPosts = false
             });
         } catch (error) {
