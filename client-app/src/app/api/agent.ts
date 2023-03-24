@@ -95,6 +95,8 @@ const Profiles = {
             headers: { "Content-Type": "multipart/form-data" }
         });
     },
+    addTag: (tagId: number) => requests.post(`/user/tag/${tagId}`, tagId),
+    deleteTag: (tagId: number) => requests.del(`/user/tag/${tagId}`)
 }
 
 const Posts = {

@@ -217,7 +217,7 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpPost("{tagId}")]
+        [HttpPost("tag/{tagId}")]
         public async Task<IActionResult> AddTagToUser(int tagId)
         {
             try
@@ -236,7 +236,7 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpDelete("{tagId}")]
+        [HttpDelete("tag/{tagId}")]
         public async Task<IActionResult> DeleteTagFromUser(int tagId)
         {
             try

@@ -133,31 +133,28 @@ export default class UserStore {
         }
     }
 
-        toggleTagFollowing = async (tag: Tag) => {
-            this.loading = true;
+    toggleTagFollowing = async (tag: Tag) => {
+        this.loading = true;
+        if (this.isTagFollowing(tag.tagId)) {
+            await agent.Profiles.deleteTag(tag.tagId);
+        }
+        else {
+            await agent.Profiles.addTag(tag.tagId);
+        }
 
-            try {
-                // await agent.Profiles.toggleFollow(user.id);
-                // runInAction(() => {
-                //     if (this.isFollowing(user.id)) {
-                //         this.followings = this.followings.filter(f => f.id !== user.id);
-                //         if (store.profileStore.profile) {
-                //             store.profileStore.followers = store.profileStore.followers.filter(f => f.id !== this.currentUser?.id);
-                //             store.profileStore.profile.followersCount--;
-                //         }
-                //     }
-                //     else {
-                //         if (store.profileStore.profile) {
-                //             store.profileStore.followers.push(this.currentUser!);
-                //             store.profileStore.profile.followersCount++;
-                //         }
-                //         this.followings.push(user);
-                //     }
-                //     this.loading = false;
-                // });
-            } catch (error) {
-                console.log(error);
-                runInAction(() => this.loading = false);
-            }
+        try {
+            runInAction(() => {
+                if (this.isTagFollowing(tag.tagId)) {
+                    this.tags = this.tags.filter(t => t.tagId !== tag.tagId);
+                }
+                else {
+                    this.tags.push(tag);
+                }
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
         }
     }
+}
