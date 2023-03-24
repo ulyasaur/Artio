@@ -83,6 +83,27 @@ namespace Artio.Controllers
             }
         }
 
+        [HttpGet("tags/{tagId}")]
+        public async Task<IActionResult> GetPostsByTag(int tagId)
+        {
+            try
+            {
+                List<Post> posts = await this._postService.GetPostsByTagAsync(tagId);
+
+                List<PostViewModel> postsViewModel = new List<PostViewModel>();
+
+                this._mapper.Map(posts, postsViewModel);
+
+                return Ok(postsViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("followings")]
         public async Task<IActionResult> GetPostsByUserFollowings()
         {

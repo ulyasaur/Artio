@@ -178,7 +178,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                         >
                             <Chip
                                 label={tag.tagName}
-                                onClick={handleClick}
+                                onClick={() => router.navigate(`/tag/${tag.tagId}`)}
                                 onDelete={handleDelete}
                             />
                         </Box>

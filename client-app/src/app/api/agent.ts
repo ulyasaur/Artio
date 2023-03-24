@@ -5,6 +5,7 @@ import AuthResponse from "../models/authResponse";
 import { Photo } from "../models/photo";
 import { Post, PostFormValues } from "../models/post";
 import { Profile } from "../models/profile";
+import { Tag } from "../models/tag";
 import { User } from "../models/user";
 import { router } from "../router/router";
 import { store } from "../stores/store";
@@ -101,6 +102,7 @@ const Posts = {
     getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`),
     getPostsByFollowings: () => requests.get<Post[]>(`/post/followings`),
     getPostsByUserTags: () => requests.get<Post[]>(`/post/tags`),
+    getPostsByTag: (tagId: string) => requests.get<Post[]>(`/post/tags/${tagId}`),
     toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId),
     addPost: (post: PostFormValues) => {
         let formData = new FormData();
@@ -115,10 +117,16 @@ const Posts = {
     deletePost: (postId: number) => requests.del(`/post/${postId}`)
 }
 
+const Tags = {
+    getUserTags: (userId:string) => requests.get<Tag[]>(`/tag/followed/${userId}`),
+    getTagById: (tagId: string) => requests.get<Tag>(`/tag/${tagId}`)
+}
+
 const agent = {
     Account,
     Profiles,
-    Posts
+    Posts,
+    Tags
 };
 
 export default agent;

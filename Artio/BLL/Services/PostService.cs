@@ -216,8 +216,29 @@ namespace BLL.Services
 
                 var tags = user.UserTags.Select(t => t.TagId);
 
-                //posts = await this._postRepository.GetAllPostsAsync(p => tags.Any(t => p.PostTags.Any(pt => pt.TagId == t)));
                 posts = (await this._postRepository.GetAllPostsAsync(p => p.PostTags.Any(pt => tags.Contains(pt.TagId)))).OrderByDescending(p => p.CreatedAt).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return posts;
+        }
+        public async Task<List<Post>> GetPostsByTagAsync(int tagId)
+        {
+            if (tagId < 0)
+            {
+                throw new ArgumentNullException("Tag id must be greater than 0");
+            }
+
+            List<Post> posts = new List<Post>();
+
+            try
+            {
+                Tag tag = await this._tagRepository.GetTagAsync(t => t.TagId == tagId);
+
+                posts = (await this._postRepository.GetAllPostsAsync(p => p.PostTags.Any(pt => pt.TagId == tagId))).OrderByDescending(p => p.CreatedAt).ToList();
             }
             catch (Exception ex)
             {

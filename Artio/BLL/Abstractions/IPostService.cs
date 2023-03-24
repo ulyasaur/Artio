@@ -15,6 +15,8 @@ namespace BLL.Abstractions
 
         Task<List<Post>> GetPostsByUserTagsAsync(string userId);
 
+        Task<List<Post>> GetPostsByTagAsync(int tagId);
+
         Task<List<Post>> GetPostsByUserFollowingsAsync(string userId);
 
         Task<Post> GetPostByIdAsync(int postId);
