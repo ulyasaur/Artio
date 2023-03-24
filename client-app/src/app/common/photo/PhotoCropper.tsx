@@ -12,7 +12,7 @@ export default observer(function PhotoCropper({imagePreview, setCropper, props}:
     return (
         <Cropper
             src={imagePreview}
-            style={{height: 200, width: "100%"}}
+            style={{height: "100%", width: "100%"}}
             zoomable
             preview=".img-preview"
             guides={false}

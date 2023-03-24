@@ -15,10 +15,12 @@ import { Post } from "../../app/models/post";
 import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
 import formatDate from "../../app/formatting/formatDate";
-import { Box, Chip, Divider, Link } from "@mui/material";
+import { Box, Chip, Divider, Link, Menu, MenuItem } from "@mui/material";
 import { useStore } from "../../app/stores/store";
 import { Link as RouterLink } from "react-router-dom";
 import FollowButton from "../followers/FollowButton";
+import { useState } from "react";
+import { router } from "../../app/router/router";
 
 interface Props {
     post: Post;
@@ -27,8 +29,18 @@ interface Props {
 
 export default observer(function PostInfo({ post, elevation }: Props) {
     const { postStore, userStore } = useStore();
-    const { isLiked, toggleLike } = postStore;
+    const { isLiked, toggleLike, deletePost } = postStore;
     const { currentUser } = userStore;
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     function handleClick() {
 
@@ -53,11 +65,28 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                         </Link>
                     }
                     action={
-                        (currentUser?.username === post.user.username) 
-                        ? <IconButton>
-                            <MoreVertIcon />
-                        </IconButton>
-                        : <FollowButton user={post.user}/>
+                        (currentUser?.username === post.user.username)
+                            ? <>
+                                <IconButton
+                                    onClick={handleOpen}>
+                                    <MoreVertIcon />
+                                </IconButton>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={() => {
+                                        handleClose();
+                                        router.navigate(`/post/update/${post.postId}`)
+                                        }}>Edit</MenuItem>
+                                    <MenuItem onClick={() => {
+                                        handleClose();
+                                        deletePost(post.postId)
+                                        }}>Delete</MenuItem>
+                                </Menu>
+                            </>
+                            : <FollowButton user={post.user} />
                     }
                     title={
                         <Link
@@ -75,7 +104,7 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                 />
                 <CardMedia
                     component="img"
-                    image={post.image ? post.image.url : placeholder}
+                    image={post.image.url ? post.image.url : placeholder}
                     alt={post.user.username}
                 />
                 <CardActions disableSpacing>

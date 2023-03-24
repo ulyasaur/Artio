@@ -20,10 +20,11 @@ namespace DAL.Repositories.ef
 
         private readonly IMapper _mapper;
 
-        public PostRepository(ApplicationContext context, ILogger<PostRepository> logger)
+        public PostRepository(ApplicationContext context, ILogger<PostRepository> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task AddPostAsync(Post post)
@@ -91,6 +92,7 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.Posts
+                    .Include(p => p.Image)
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)
@@ -112,6 +114,7 @@ namespace DAL.Repositories.ef
             try
             {
                 return await this._context.Posts
+                    .Include(p => p.Image)
                     .Include(p => p.PostTags)
                         .ThenInclude(t => t.Tag)
                     .Include(p => p.User)

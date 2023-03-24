@@ -13,3 +13,22 @@ export interface Post {
     tags: Tag[];
     likes: Like[];
 }
+
+export class PostFormValues {
+    postId: number | undefined = undefined;
+    image: Blob | null = null;
+    description: string = "";
+    tags: Tag[] = [];
+
+    constructor(postId?: number,
+        image?: Blob,
+        description?: string,
+        tags?: Tag[]) {
+        if (postId && image && description && tags) {
+            this.postId = postId;
+            this.image = image;
+            this.description = description;
+            this.tags = tags;
+        }
+    }
+}

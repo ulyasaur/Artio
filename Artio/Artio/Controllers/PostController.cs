@@ -128,7 +128,7 @@ namespace Artio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost(PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> AddPost([FromForm]PostCreateViewModel postCreateViewModel)
         {
             try
             {
@@ -139,9 +139,11 @@ namespace Artio.Controllers
                 post.UserId = this._userAccessor.GetUserId();
                 post.CreatedAt = DateTimeOffset.UtcNow;
 
-                await this._postService.AddPostAsync(post);
+                Post addedPost = await this._postService.AddPostAsync(post);
+                PostViewModel postViewModel= new PostViewModel();
+                this._mapper.Map(addedPost, postViewModel);
 
-                return Ok();
+                return Ok(postViewModel);
             }
             catch (Exception ex)
             {
@@ -170,13 +172,13 @@ namespace Artio.Controllers
         }
 
         [HttpPut("{postId}")]
-        public async Task<IActionResult> EditPost(int postId, PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> EditPost(int postId, PostUpdateViewModel postUpdateViewModel)
         {
             try
             {
                 PostDto post = new PostDto();
 
-                this._mapper.Map(postCreateViewModel, post);
+                this._mapper.Map(postUpdateViewModel, post);
                 post.PostId = postId;
 
                 await this._postService.UpdatePostAsync(post);

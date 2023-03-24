@@ -1,5 +1,6 @@
 ﻿using Artio.ViewModels;
 using AutoMapper;
+using BLL.Dtos;
 using Core.Entitites;
 
 namespace Artio.Mapping
@@ -17,6 +18,10 @@ namespace Artio.Mapping
                 .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comments.Count));
 
             CreateMap<Post, PostCreateViewModel>();
+
+            CreateMap<PostCreateViewModel, PostDto>();
+
+            CreateMap<PostUpdateViewModel, PostDto>();
 
             CreateMap<Tag, TagViewModel>();
 

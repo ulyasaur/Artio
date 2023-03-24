@@ -10,15 +10,15 @@ export default observer(function ProfilePage() {
     const { username } = useParams<string>();
     const { profileStore , postStore} = useStore();
     const { loadingProfile, loadProfile, profile } = profileStore;
-    const { loadingPosts, loadUserPosts, posts } = postStore;
+    const { loadingPosts, loadUserPosts, userPosts } = postStore;
 
     useEffect(() => {
         loadProfile(username!);
-        if (profile && !posts)
+        if (profile && !userPosts)
         {
             loadUserPosts(profile!.id);
         }        
-    }, [username, profile?.id, posts]);
+    }, [username, profile?.id, userPosts]);
     
     if (loadingProfile || loadingPosts) {
         return <LoadingComponent content="Loading profile..." />
@@ -26,10 +26,10 @@ export default observer(function ProfilePage() {
 
     return (
         <>
-            {profile && posts &&
+            {profile && userPosts &&
                 <>
                     <ProfileHeader profile={profile!} />
-                    <ProfilePosts posts={posts!}/>
+                    <ProfilePosts posts={userPosts!} profileId={profile.id}/>
                 </>
             }
         </>

@@ -53,9 +53,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                     sx={{ height: 250 }}
                     image={profile.background ? profile.background?.url : placeholder}
                 />
-                <CardContent
-
-                >
+                <CardContent>
                     <Grid
                         container
                     >

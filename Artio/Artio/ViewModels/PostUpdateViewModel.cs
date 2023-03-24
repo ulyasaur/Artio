@@ -1,8 +1,8 @@
 ﻿namespace Artio.ViewModels
 {
-    public class PostCreateViewModel
+    public class PostUpdateViewModel
     {
-        public IFormFile Image { get; set; }
+        public int PostId { get; set; }
 
         public string? Description { get; set; }
 

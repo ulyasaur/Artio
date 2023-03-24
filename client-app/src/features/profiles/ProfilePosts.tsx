@@ -7,13 +7,17 @@ import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "../../app/common/themes/theme";
 import { router } from "../../app/router/router";
+import { useStore } from "../../app/stores/store";
 
 interface Props {
     posts: Post[];
+    profileId: string;
 }
 
-export default observer(function ProfilePosts({ posts }: Props) {
-
+export default observer(function ProfilePosts({ posts, profileId }: Props) {
+    const { userStore } = useStore();
+    const { currentUser } = userStore;
+    
     return (
         <ThemeProvider theme={theme}>
             <Card sx={{
@@ -26,12 +30,12 @@ export default observer(function ProfilePosts({ posts }: Props) {
                         backgroundColor: "hotpink",
                         color: "white"
                     }}
-                    action={
-                        <Tooltip title="Add post" >
-                            <IconButton>
+                    action={(currentUser?.id === profileId)
+                        ? <Tooltip title="Add post" >
+                            <IconButton onClick={() => router.navigate("post/create")}>
                                 <AddIcon fontSize="large" sx={{ color: "white" }} />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> : null
                     }
                     title="POSTS"
                     titleTypographyProps={{
@@ -51,8 +55,8 @@ export default observer(function ProfilePosts({ posts }: Props) {
                         {posts.map((post) => (
                             <div key={post.postId} onClick={() => router.navigate(`/post/${post.postId}`)}>
                                 <img
-                                    src={`${post.image ? post.image.url : placeholder}?w=162&auto=format`}
-                                    srcSet={`${post.image ? post.image.url : placeholder}?w=162&auto=format&dpr=2 2x`}
+                                    src={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format`}
+                                    srcSet={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format&dpr=2 2x`}
                                     alt="post"
                                     loading="lazy"
                                     style={{

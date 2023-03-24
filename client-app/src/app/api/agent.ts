@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Auth } from "../models/auth";
 import AuthResponse from "../models/authResponse";
 import { Photo } from "../models/photo";
-import { Post } from "../models/post";
+import { Post, PostFormValues } from "../models/post";
 import { Profile } from "../models/profile";
 import { User } from "../models/user";
 import { router } from "../router/router";
@@ -76,9 +76,9 @@ const Account = {
 
 const Profiles = {
     get: (username: string) => requests.get<Profile>(`/user/${username}`),
-    toggleFollow: (targetId : string) => requests.put(`/user/${targetId}`, targetId),
-    getFollowers: (targetId : string) => requests.get<User[]>(`/user/${targetId}/followers`),
-    getFollowings: (observerId : string) => requests.get<User[]>(`/user/${observerId}/followings`),
+    toggleFollow: (targetId: string) => requests.put(`/user/${targetId}`, targetId),
+    getFollowers: (targetId: string) => requests.get<User[]>(`/user/${targetId}/followers`),
+    getFollowings: (observerId: string) => requests.get<User[]>(`/user/${observerId}/followings`),
     updateProfile: (profile: Partial<Profile>) => requests.put(`/user`, profile),
     uploadProfilePicture: (file: Blob) => {
         let formData = new FormData();
@@ -101,7 +101,18 @@ const Posts = {
     getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`),
     getPostsByFollowings: () => requests.get<Post[]>(`/post/followings`),
     getPostsByUserTags: () => requests.get<Post[]>(`/post/tags`),
-    toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId)    
+    toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId),
+    addPost: (post: PostFormValues) => {
+        let formData = new FormData();
+        formData.append("Description", post.description);
+        formData.append("Tags", JSON.stringify(post.tags));
+        formData.append("Image", post.image!);
+        return axios.post<Post>("/post", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    },
+    updatePost: (post: PostFormValues) => requests.put(`/post/${post.postId}`, post),
+    deletePost: (postId: number) => requests.del(`/post/${postId}`)
 }
 
 const agent = {

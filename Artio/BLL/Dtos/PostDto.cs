@@ -1,4 +1,5 @@
 ﻿using Core.Entitites;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace BLL.Dtos
     {
         public int PostId { get; set; }
 
-        public string ImageUrl { get; set; }
+        public IFormFile Image { get; set; }
 
         public string Description { get; set; }
 
@@ -19,6 +20,6 @@ namespace BLL.Dtos
 
         public string UserId { get; set; }
 
-        public List<int> Tags { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }

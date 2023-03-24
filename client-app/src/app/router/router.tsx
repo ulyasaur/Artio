@@ -3,6 +3,7 @@ import NotFound from "../../features/errors/NotFound";
 import FollowList from "../../features/followers/FollowList";
 import HomePage from "../../features/home/HomePage";
 import FeedPage from "../../features/posts/FeedPage";
+import PostForm from "../../features/posts/PostForm";
 import PostPage from "../../features/posts/PostPage";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import SettingsPage from "../../features/profiles/SettingsPage";
@@ -20,6 +21,8 @@ export const routes: RouteObject[] = [
                     { path: "profile/:username", element: <ProfilePage /> },
                     { path: "settings", element: <SettingsPage /> },
                     { path: "post/:postId", element: <PostPage /> },
+                    { path: "post/create", element: <PostForm /> },
+                    { path: "post/update/:postId", element: <PostForm /> },
                     { path: ":username/followers", element: <FollowList predicate="followers" /> },
                     { path: ":username/followings", element: <FollowList predicate="followings" /> },
                     { path: "home", element: <HomePage /> }
