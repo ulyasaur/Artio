@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from "formik";
 import { useStore } from "../../app/stores/store";
 import { PostFormValues } from "../../app/models/post";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Box, Card, CardContent, CardHeader, CardMedia, Chip, Divider, Grid, ThemeProvider, Typography } from "@mui/material";
+import { Autocomplete, Box, Card, CardContent, CardHeader, CardMedia, Chip, Divider, Grid, TextField, ThemeProvider, Typography } from "@mui/material";
 import { theme } from "../../app/common/themes/theme";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
@@ -13,14 +13,17 @@ import PhotoDropzone from "../../app/common/photo/PhotoDropzone";
 import PhotoCropper from "../../app/common/photo/PhotoCropper";
 import { toast } from "react-toastify";
 import placeholder from "../../assets/placeholder.png";
+import { Tag } from "../../app/models/tag";
 
-export default observer(function ActivityForm() {
-    const { postStore } = useStore();
+export default observer(function PostForm() {
+    const { postStore, tagStore } = useStore();
     const { createPost, updatePost, loadPost, loadingPosts, post } = postStore;
+    const { loadTags, tags, addTag, getTagByTagName } = tagStore;
     const { postId } = useParams<string>();
     const navigate = useNavigate();
 
     const [editingPost, setEditingPost] = useState<PostFormValues>(new PostFormValues());
+    const [editTags, setEditTags] = useState<Tag[]>([]);
     const [files, setFiles] = useState<any>([]);
     const [cropper, setCropper] = useState<Cropper>();
 
@@ -33,15 +36,16 @@ export default observer(function ActivityForm() {
     }, [files])
 
     useEffect(() => {
+        loadTags();
         if (postId) {
             loadPost(postId);
             if (post) {
                 editingPost.postId = post.postId;
                 editingPost.description = post.description;
-                editingPost.tags = post.tags;
+                setEditTags(post.tags);
             }
         }
-    }, [postId, loadPost]);
+    }, [postId, loadPost, loadTags]);
 
     const handleFormSubmit = async (description: string) => {
         if (!editingPost.postId) {
@@ -49,22 +53,22 @@ export default observer(function ActivityForm() {
                 const canvas = cropper.getCroppedCanvas();
                 editingPost.image = await new Promise(resolve => canvas.toBlob(resolve));
                 editingPost.description = description;
-                editingPost.tags = [];
+                editingPost.tags = editTags;
                 await createPost(editingPost);
                 setFiles([]);
                 navigate("/");
             } else {
-                toast.error("Add photo firt");
+                toast.error("Add photo first");
             }
         } else {
             editingPost.description = description;
-            editingPost.tags = post!.tags;
+            editingPost.tags = editTags;
             updatePost(editingPost);
             navigate("/");
         }
     }
 
-    if (loadingPosts) {
+    if (loadingPosts || !tags) {
         return <LoadingComponent />
     }
 
@@ -103,7 +107,7 @@ export default observer(function ActivityForm() {
                         </CardContent>
                 }
 
-                <Divider variant="middle" sx={{mt: "2vh"}}>
+                <Divider variant="middle" sx={{ mt: "2vh" }}>
                     <Typography
                         sx={{
                             color: "hotpink"
@@ -113,7 +117,7 @@ export default observer(function ActivityForm() {
                     </Typography>
                 </Divider>
                 <CardContent>
-                    {editingPost.tags.map((tag) => (
+                    {editTags.map((tag) => (
                         <Box
                             key={tag.tagName}
                             sx={{
@@ -124,10 +128,61 @@ export default observer(function ActivityForm() {
                         >
                             <Chip
                                 label={tag.tagName}
-                            // onClick={handleClick}
+                                onDelete={() => {
+                                   setEditTags(editTags.filter(x => x.tagId !== tag.tagId));
+                                }}
                             />
                         </Box>
                     ))}
+                    <Autocomplete
+                        sx={{
+                            padding: "2px",
+                            display: "inline-block",
+                            width: 300
+                        }}
+                        onChange={async (event, newValue) => {
+                            if (newValue) {                                
+                                if (typeof (newValue) === 'string') {
+                                    await addTag(newValue);
+                                    newValue = getTagByTagName(newValue)!;
+                                }
+                                if (newValue?.tagId === 0) {
+                                    await addTag(newValue.tagName);
+                                    newValue = getTagByTagName(newValue.tagName)!;
+                                }
+                                setEditTags([...editTags, newValue]);
+                            }
+                        }}
+                        filterOptions={(options, params) => {
+                            const { inputValue } = params;
+                            const filtered = options.filter(option => option.tagName.startsWith(inputValue)
+                                && !editTags.find(op => op.tagName === option.tagName));
+                            const isExisting = options.some((option) => inputValue === option.tagName);
+                            if (inputValue !== '' && !isExisting) {
+                                filtered.push({
+                                    tagId: 0,
+                                    tagName: `${inputValue}`
+                                });
+                            }
+
+                            return filtered;
+                        }}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        options={tags}
+                        getOptionLabel={(option) => {
+                            if (typeof (option) === 'string') {
+                                return option;
+                            }
+                            return option.tagName;
+                        }}
+                        renderOption={(props, option) => <li {...props}>{option.tagName}</li>}
+                        freeSolo
+                        renderInput={(params) => (
+                            <TextField {...params} placeholder="Add tag" size="small" variant="standard" />
+                        )}
+                    />
                 </CardContent>
                 <Divider variant="middle" />
                 <CardContent>

@@ -20,14 +20,6 @@ export default observer(function ProfileHeader({ profile }: Props) {
     const { userStore } = useStore();
     const { currentUser } = userStore;
 
-    function handleClick() {
-
-    }
-
-    function handleDelete() {
-
-    }
-
     return (
         <ThemeProvider theme={theme}>
             <Card
@@ -178,8 +170,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                         >
                             <Chip
                                 label={tag.tagName}
-                                onClick={handleClick}
-                                onDelete={handleDelete}
+                                onClick={() => router.navigate(`/tag/${tag.tagId}`)}
                             />
                         </Box>
                     ))}

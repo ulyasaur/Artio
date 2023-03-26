@@ -26,10 +26,10 @@ namespace Artio.Controllers
         private readonly IMapper _mapper;
 
         public PostController(
-            IPostService postService, 
-            ILikeService likeService, 
-            ILogger<PostController> logger, 
-            IUserAccessor userAccessor, 
+            IPostService postService,
+            ILikeService likeService,
+            ILogger<PostController> logger,
+            IUserAccessor userAccessor,
             IMapper mapper)
         {
             _postService = postService;
@@ -68,6 +68,27 @@ namespace Artio.Controllers
                 string userId = this._userAccessor.GetUserId();
 
                 List<Post> posts = await this._postService.GetPostsByUserTagsAsync(userId);
+
+                List<PostViewModel> postsViewModel = new List<PostViewModel>();
+
+                this._mapper.Map(posts, postsViewModel);
+
+                return Ok(postsViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("tags/{tagId}")]
+        public async Task<IActionResult> GetPostsByTag(int tagId)
+        {
+            try
+            {
+                List<Post> posts = await this._postService.GetPostsByTagAsync(tagId);
 
                 List<PostViewModel> postsViewModel = new List<PostViewModel>();
 
@@ -128,7 +149,9 @@ namespace Artio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost([FromForm]PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> AddPost(
+            [FromForm] 
+            PostCreateViewModel postCreateViewModel)
         {
             try
             {
@@ -177,7 +200,6 @@ namespace Artio.Controllers
             try
             {
                 PostDto post = new PostDto();
-
                 this._mapper.Map(postUpdateViewModel, post);
                 post.PostId = postId;
 

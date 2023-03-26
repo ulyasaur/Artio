@@ -42,10 +42,6 @@ export default observer(function PostInfo({ post, elevation }: Props) {
         setAnchorEl(null);
     };
 
-    function handleClick() {
-
-    }
-
     return (
         <ThemeProvider theme={theme}>
             <Card
@@ -141,7 +137,7 @@ export default observer(function PostInfo({ post, elevation }: Props) {
                         >
                             <Chip
                                 label={tag.tagName}
-                                onClick={handleClick}
+                                onClick={() => router.navigate(`/tag/${tag.tagId}`)}
                             />
                         </Box>
                     ))}

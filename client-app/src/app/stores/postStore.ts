@@ -70,6 +70,21 @@ export default class PostStore {
         }
     }
 
+    loadPostsByTag = async (tagId: string) => {
+        this.loadingPosts = true;
+        try {
+            const posts = await agent.Posts.getPostsByTag(tagId);
+
+            runInAction(() => {
+                this.posts = posts;
+                this.loadingPosts = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingPosts = false);
+        }
+    }
+
     createPost = async (post: PostFormValues) => {
         this.loadingPosts = true;
         try {

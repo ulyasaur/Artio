@@ -5,6 +5,7 @@ import AuthResponse from "../models/authResponse";
 import { Photo } from "../models/photo";
 import { Post, PostFormValues } from "../models/post";
 import { Profile } from "../models/profile";
+import { Tag } from "../models/tag";
 import { User } from "../models/user";
 import { router } from "../router/router";
 import { store } from "../stores/store";
@@ -94,6 +95,8 @@ const Profiles = {
             headers: { "Content-Type": "multipart/form-data" }
         });
     },
+    addTag: (tagId: number) => requests.post(`/user/tag/${tagId}`, tagId),
+    deleteTag: (tagId: number) => requests.del(`/user/tag/${tagId}`)
 }
 
 const Posts = {
@@ -101,11 +104,17 @@ const Posts = {
     getPost: (postId: string) => requests.get<Post>(`/post/post/${postId}`),
     getPostsByFollowings: () => requests.get<Post[]>(`/post/followings`),
     getPostsByUserTags: () => requests.get<Post[]>(`/post/tags`),
+    getPostsByTag: (tagId: string) => requests.get<Post[]>(`/post/tags/${tagId}`),
     toggleLike: (postId: string) => requests.post(`/post/like/${postId}`, postId),
     addPost: (post: PostFormValues) => {
         let formData = new FormData();
         formData.append("Description", post.description);
-        formData.append("Tags", JSON.stringify(post.tags));
+        post.tags.forEach((tag, index) => {
+            const keys = Object.keys(tag) as (keyof Tag)[];
+            keys.forEach(key => {
+              formData.append(`Tags[${index}][${key}]`, tag[key].toString());
+            });
+          });
         formData.append("Image", post.image!);
         return axios.post<Post>("/post", formData, {
             headers: { "Content-Type": "multipart/form-data" }
@@ -115,10 +124,18 @@ const Posts = {
     deletePost: (postId: number) => requests.del(`/post/${postId}`)
 }
 
+const Tags = {
+    getAllTags: () => requests.get<Tag[]>(`/tag`),
+    getUserTags: (userId:string) => requests.get<Tag[]>(`/tag/followed/${userId}`),
+    getTagById: (tagId: string) => requests.get<Tag>(`/tag/${tagId}`),
+    addTag: (tagName: string) => requests.post<Tag>(`/tag`, { tagName: tagName })
+}
+
 const agent = {
     Account,
     Profiles,
-    Posts
+    Posts,
+    Tags
 };
 
 export default agent;

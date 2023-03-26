@@ -46,14 +46,57 @@ namespace Artio.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddTag(string tagName)
+        [HttpGet("{tagId}")]
+        public async Task<IActionResult> GetTagById(int tagId) 
         {
             try
             {
-                await this._tagService.AddTagAsync(new Tag { TagName = tagName });
+                Tag tag = await this._tagService.GetTagByIdAsync(tagId);
 
-                return Ok();
+                TagViewModel tagsViewModel = new TagViewModel();
+                this._mapper.Map(tag, tagsViewModel);
+
+                return Ok(tagsViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("followed/{userId}")]
+        public async Task<IActionResult> GetAllTags(string userId) 
+        {
+            try
+            {
+                List<Tag> tags = await this._tagService.GetUserTagsAsync(userId);
+
+                List<TagViewModel> tagsViewModels = new List<TagViewModel>();
+                this._mapper.Map(tags, tagsViewModels);
+
+                return Ok(tagsViewModels);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTag(TagCreateViewModel tagCreateViewModel)
+        {
+            try
+            {
+                Tag tag = await this._tagService.AddTagAsync(new Tag { TagName = tagCreateViewModel.TagName });
+
+                TagViewModel tagViewModel = new TagViewModel();
+                this._mapper.Map(tag, tagViewModel);
+
+                return Ok(tagViewModel);
             }
             catch (Exception ex)
             {
