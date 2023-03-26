@@ -26,10 +26,10 @@ namespace Artio.Controllers
         private readonly IMapper _mapper;
 
         public PostController(
-            IPostService postService, 
-            ILikeService likeService, 
-            ILogger<PostController> logger, 
-            IUserAccessor userAccessor, 
+            IPostService postService,
+            ILikeService likeService,
+            ILogger<PostController> logger,
+            IUserAccessor userAccessor,
             IMapper mapper)
         {
             _postService = postService;
@@ -149,7 +149,9 @@ namespace Artio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost([FromForm]PostCreateViewModel postCreateViewModel)
+        public async Task<IActionResult> AddPost(
+            [FromForm] 
+            PostCreateViewModel postCreateViewModel)
         {
             try
             {
@@ -198,7 +200,6 @@ namespace Artio.Controllers
             try
             {
                 PostDto post = new PostDto();
-
                 this._mapper.Map(postUpdateViewModel, post);
                 post.PostId = postId;
 

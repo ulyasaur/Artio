@@ -87,11 +87,11 @@ namespace Artio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTag(string tagName)
+        public async Task<IActionResult> AddTag(TagCreateViewModel tagCreateViewModel)
         {
             try
             {
-                Tag tag = await this._tagService.AddTagAsync(new Tag { TagName = tagName });
+                Tag tag = await this._tagService.AddTagAsync(new Tag { TagName = tagCreateViewModel.TagName });
 
                 TagViewModel tagViewModel = new TagViewModel();
                 this._mapper.Map(tag, tagViewModel);

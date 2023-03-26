@@ -25,6 +25,8 @@ namespace Artio.Mapping
 
             CreateMap<Tag, TagViewModel>();
 
+            CreateMap<TagViewModel, Tag>();
+
             CreateMap<User, UserProfileViewModel>()
                 .ForMember(d => d.Tags, o => o.MapFrom(s => s.UserTags.Select(x => x.Tag)))
                 .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count))

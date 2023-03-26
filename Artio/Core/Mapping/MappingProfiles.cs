@@ -13,6 +13,7 @@ namespace Core.Mapping
         public MappingProfiles()
         {
             CreateMap<Post, Post>();
+            CreateMap<PostTag, PostTag>();
         }
     }
 }

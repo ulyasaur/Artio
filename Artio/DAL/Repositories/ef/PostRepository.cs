@@ -134,9 +134,10 @@ namespace DAL.Repositories.ef
         {
             try
             {
-                Post dbPost = await this._context.Posts.SingleAsync(p => p.PostId == post.PostId);
+                Post dbPost = await this._context.Posts.AsNoTracking().Include(p => p.PostTags).SingleAsync(p => p.PostId == post.PostId);
 
                 this._mapper.Map(post, dbPost);
+
                 await this._context.SaveChangesAsync();
             }
             catch (Exception ex)

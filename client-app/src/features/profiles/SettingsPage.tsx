@@ -1,12 +1,12 @@
 import { ThemeProvider } from "@emotion/react";
-import { Avatar, Badge, Card, CardContent, CardMedia, Chip, Divider, Grid, IconButton, Typography } from "@mui/material";
+import { Autocomplete, Avatar, Badge, Card, CardContent, CardMedia, Chip, Divider, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/common/themes/theme";
 import { useStore } from "../../app/stores/store";
 import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { ErrorMessage, Formik } from "formik";
 import FormTextField from "../../app/common/form/FormTextField";
@@ -14,35 +14,34 @@ import { LoadingButton } from "@mui/lab";
 import { PhotoCamera } from "@mui/icons-material";
 import PhotoUploadWidget from "../../app/common/photo/PhotoUploadWidget";
 
+
 export default observer(function SettingsPage() {
-    const { userStore, profileStore } = useStore();
+    const { userStore, profileStore, tagStore } = useStore();
     const { currentUser } = userStore;
+    const { loadTags, loading, tags, addTag, getTagByTagName } = tagStore;
     const { loadingProfile,
         loadProfile,
         profile,
         updateProfile,
         uploading,
         uploadProfilePicture,
-        uploadBackgroundPicture } = profileStore;
+        uploadBackgroundPicture,
+        deleteTagFromUser,
+        addTagToUser } = profileStore;
 
     const [openDialog, setOpenDialog] = useState(false);
     const [uploadPhoto, setUpload] = useState<string>("profile");
     const [cropperProps, setCropperProps] = useState<{}>();
 
+    const [key, setKey] = useState<Key>(1);
+
     useEffect(() => {
         loadProfile(currentUser?.username!);
-    }, [currentUser?.username, profile?.id, loadProfile]);
+        loadTags();
+    }, [currentUser?.username, profile?.id, loadProfile, loadTags]);
 
-    if (loadingProfile || !profile) {
+    if (loadingProfile || !profile || loading || !tags) {
         return <LoadingComponent content="Loading profile..." />
-    }
-
-    function handleClick() {
-
-    }
-
-    function handleDelete() {
-
     }
 
     return (
@@ -54,7 +53,7 @@ export default observer(function SettingsPage() {
                 }}
             >
                 <IconButton
-                    sx={{ 
+                    sx={{
                         color: "white",
                         position: "absolute",
                         zIndex: "999"
@@ -184,11 +183,63 @@ export default observer(function SettingsPage() {
                         >
                             <Chip
                                 label={tag.tagName}
-                                onClick={handleClick}
-                                onDelete={handleDelete}
+                                onDelete={() => deleteTagFromUser(tag)}
                             />
                         </Box>
                     ))}
+                    <Autocomplete
+                        sx={{
+                            padding: "2px",
+                            display: "inline-block",
+                            width: 300
+                        }}
+                        key={key}
+                        onChange={async (event, newValue) => {
+                            setKey(0);
+                            if (newValue) {
+                                if (typeof (newValue) === 'string') {
+                                    await addTag(newValue);
+                                    newValue = getTagByTagName(newValue)!;
+                                }
+                                if (newValue?.tagId === 0) {
+                                    await addTag(newValue.tagName);
+                                    newValue = getTagByTagName(newValue.tagName)!;
+                                }
+                                await addTagToUser(newValue!);
+                            }
+                            setKey(1);
+                        }}
+                        filterOptions={(options, params) => {
+                            const { inputValue } = params;
+                            const filtered = options.filter(option => option.tagName.startsWith(inputValue)
+                                && !profile.tags.find(op => op.tagName === option.tagName));
+                            const isExisting = options.some((option) => inputValue === option.tagName);
+                            if (inputValue !== '' && !isExisting) {
+                                filtered.push({
+                                    tagId: 0,
+                                    tagName: `${inputValue}`
+                                });
+                            }
+
+                            return filtered;
+                        }}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        disablePortal
+                        options={tags}
+                        getOptionLabel={(option) => {
+                            if (typeof (option) === 'string') {
+                                return option;
+                            }
+                            return option.tagName;
+                        }}
+                        renderOption={(props, option) => <li {...props}>{option.tagName}</li>}
+                        freeSolo
+                        renderInput={(params) => (
+                            <TextField {...params} placeholder="Add tag" size="small" variant="standard" />
+                        )}
+                    />
                 </CardContent>
             </Card>
 
