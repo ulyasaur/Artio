@@ -61,10 +61,9 @@ export default observer(function FollowButton({ predicate }: Props) {
                         backgroundColor: "hotpink",
                         color: "white"
                     }}
-                    title={predicate === "followers" ? "Followers" : "Followings"}
+                    title={predicate === "followers" ? `Followers (${followers.length})` : `Followings (${followings.length})`}
                     titleTypographyProps={{
                         display: "inline-block",
-                        width: "min-content",
                         fontSize: "13pt",
                         fontWeight: "bold"
                     }}

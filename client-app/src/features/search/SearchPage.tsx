@@ -10,6 +10,7 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import UserCard from "../followers/UserCard";
 import TagCard from "../tags/TagCard";
+import NothingFound from "../../app/common/placeholders/NothingFound";
 
 export default observer(function SearchPage() {
     const { search } = useParams<string>();
@@ -39,16 +40,20 @@ export default observer(function SearchPage() {
                 <TabPanel value='users'>
                     {(loadingSearch || !searchedUsers)
                         ? <LoadingComponent content="Loading posts..." />
-                        : searchedUsers.map(user => (
-                            <UserCard key={user.id} user={user}/>
-                        ))}
+                        : (searchedUsers.length === 0)
+                            ? <NothingFound />
+                            : searchedUsers.map(user => (
+                                <UserCard key={user.id} user={user} />
+                            ))}
                 </TabPanel>
                 <TabPanel value='tags'>
                     {(loading || !searchedTags)
                         ? <LoadingComponent content="Loading posts..." />
-                        : searchedTags.map(tag => (
-                            <TagCard key={tag.tagId} tag={tag} />
-                        ))}
+                        : (searchedTags.length === 0)
+                            ? <NothingFound />
+                            : searchedTags.map(tag => (
+                                <TagCard key={tag.tagId} tag={tag} />
+                            ))}
                 </TabPanel>
             </TabContext>
         </ThemeProvider>
