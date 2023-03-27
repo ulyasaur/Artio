@@ -10,6 +10,7 @@ import PostInfo from "./PostInfo";
 import { Link as RouterLink } from "react-router-dom";
 import PeopleIcon from '@mui/icons-material/People';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
+import NoPosts from "../../app/common/placeholders/NoPosts";
 
 export default observer(function PostPage() {
     const { postStore } = useStore();
@@ -24,7 +25,7 @@ export default observer(function PostPage() {
     useEffect(() => {
         loadPosts(value);
     }, [value, loadPosts]);
-    
+
     return (
         <ThemeProvider theme={theme}>
             <TabContext value={value}>
@@ -37,61 +38,65 @@ export default observer(function PostPage() {
                 <TabPanel value='users'>
                     {(loadingPosts || !posts)
                         ? <LoadingComponent content="Loading posts..." />
-                        : posts.map(post => (
-                            <Paper sx={{ marginBottom: "5px" }}>
-                                <PostInfo key={post.postId} post={post} />
-                                <Divider variant="middle" />
-                                <Link
-                                    component={RouterLink}
-                                    to={`/post/${post.postId}`}
-                                    sx={{
-                                        textDecoration: "none"
-                                    }}
-                                >
-                                    <Button
-                                        variant="text"
+                        : (posts.length === 0)
+                            ? <NoPosts />
+                            : posts.map(post => (
+                                <Paper sx={{ marginBottom: "5px" }}>
+                                    <PostInfo key={post.postId} post={post} />
+                                    <Divider variant="middle" />
+                                    <Link
+                                        component={RouterLink}
+                                        to={`/post/${post.postId}`}
                                         sx={{
-                                            color: 'grey',
-                                            borderColor: "grey",
-                                            margin: "6px",
-                                            textTransform: "none"
+                                            textDecoration: "none"
                                         }}
                                     >
-                                        View comments ({post.commentCount})
-                                    </Button>
-                                </Link>
-                            </Paper>
+                                        <Button
+                                            variant="text"
+                                            sx={{
+                                                color: 'grey',
+                                                borderColor: "grey",
+                                                margin: "6px",
+                                                textTransform: "none"
+                                            }}
+                                        >
+                                            View comments ({post.commentCount})
+                                        </Button>
+                                    </Link>
+                                </Paper>
 
-                        ))}
+                            ))}
                 </TabPanel>
                 <TabPanel value='tags'>
                     {(loadingPosts || !posts)
                         ? <LoadingComponent content="Loading posts..." />
-                        : posts.map(post => (
-                        <Paper sx={{ marginBottom: "5px" }}>
-                            <PostInfo key={post.postId} post={post} />
-                            <Divider variant="middle" />
-                            <Link
-                                component={RouterLink}
-                                to={`/post/${post.postId}`}
-                                sx={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                <Button
-                                    variant="text"
-                                    sx={{
-                                        color: 'grey',
-                                        borderColor: "grey",
-                                        margin: "6px",
-                                        textTransform: "none"
-                                    }}
-                                >
-                                    View comments ({post.commentCount})
-                                </Button>
-                            </Link>
-                        </Paper>
-                    ))}
+                        : (posts.length === 0)
+                            ? <NoPosts />
+                            : posts.map(post => (
+                                <Paper sx={{ marginBottom: "5px" }}>
+                                    <PostInfo key={post.postId} post={post} />
+                                    <Divider variant="middle" />
+                                    <Link
+                                        component={RouterLink}
+                                        to={`/post/${post.postId}`}
+                                        sx={{
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        <Button
+                                            variant="text"
+                                            sx={{
+                                                color: 'grey',
+                                                borderColor: "grey",
+                                                margin: "6px",
+                                                textTransform: "none"
+                                            }}
+                                        >
+                                            View comments ({post.commentCount})
+                                        </Button>
+                                    </Link>
+                                </Paper>
+                            ))}
                 </TabPanel>
             </TabContext>
         </ThemeProvider>

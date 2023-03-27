@@ -67,11 +67,31 @@ namespace Artio.Controllers
         }
 
         [HttpGet("followed/{userId}")]
-        public async Task<IActionResult> GetAllTags(string userId) 
+        public async Task<IActionResult> GetUserTags(string userId) 
         {
             try
             {
                 List<Tag> tags = await this._tagService.GetUserTagsAsync(userId);
+
+                List<TagViewModel> tagsViewModels = new List<TagViewModel>();
+                this._mapper.Map(tags, tagsViewModels);
+
+                return Ok(tagsViewModels);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet("search/{search}")]
+        public async Task<IActionResult> GetTagsBySearch(string search) 
+        {
+            try
+            {
+                List<Tag> tags = await this._tagService.GetTagsBySearchAsync(search);
 
                 List<TagViewModel> tagsViewModels = new List<TagViewModel>();
                 this._mapper.Map(tags, tagsViewModels);

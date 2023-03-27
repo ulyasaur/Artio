@@ -11,6 +11,8 @@ export default class ProfileStore {
     uploading: boolean = false;
     followings: User[] = [];
     followers: User[] = [];
+    searchedUsers: User[] | null = null;
+    loadingSearch: boolean = false;
     loadingFollowings: boolean = false;
     loadingFollowers: boolean = false;
 
@@ -36,6 +38,22 @@ export default class ProfileStore {
         } catch (error) {
             console.log(error);
             runInAction(() => this.loadingProfile = false);
+        }
+    }
+
+    loadSearchedUsers = async (search: string) => {
+        this.loadingSearch = true;
+
+        try {
+            const users = await agent.Profiles.getSearchedUsers(search);
+
+            runInAction(() => {
+                this.searchedUsers = users;
+                this.loadingSearch = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingSearch = false);
         }
     }
 

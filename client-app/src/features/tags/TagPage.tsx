@@ -37,7 +37,7 @@ export default observer(function TagPage() {
                 >
                     <CardMedia
                     sx={{ height: 250 }}
-                    image={posts[0].image.url || placeholder}
+                    image={posts.length!== 0 ? posts[0].image.url : placeholder}
                 />
                     <CardHeader
                         avatar={

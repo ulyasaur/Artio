@@ -14,11 +14,11 @@ export default observer(function ProfilePage() {
 
     useEffect(() => {
         loadProfile(username!);
-        if (profile && !userPosts)
+        if (profile)
         {
             loadUserPosts(profile!.id);
         }        
-    }, [username, profile?.id, userPosts]);
+    }, [username, profile?.id]);
     
     if (loadingProfile || loadingPosts) {
         return <LoadingComponent content="Loading profile..." />

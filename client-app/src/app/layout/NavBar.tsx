@@ -1,4 +1,4 @@
-import { alpha, AppBar, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputBase, Link, ListItemIcon, Menu, MenuItem, styled, Toolbar, Tooltip, Typography } from '@mui/material';
+import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputAdornment, Link, ListItemIcon, Menu, MenuItem, styled, TextField, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
 import SearchIcon from '@mui/icons-material/Search';
@@ -11,11 +11,12 @@ import { theme } from '../common/themes/theme';
 import { observer } from 'mobx-react-lite';
 import { Link as RouterLink } from "react-router-dom";
 import { router } from '../router/router';
+import { useState } from 'react';
 
 function NavBar() {
   const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
 
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -27,10 +28,11 @@ function NavBar() {
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
+    borderColor: theme.palette.common.white,
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.5),
     },
     marginLeft: 0,
     width: '100%',
@@ -40,17 +42,7 @@ function NavBar() {
     },
   }));
 
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
@@ -121,12 +113,33 @@ function NavBar() {
                 </Box>
 
                 <Search>
-                  <SearchIconWrapper>
-                    <SearchIcon />
-                  </SearchIconWrapper>
-                  <StyledInputBase
-                    placeholder="Search for tags…"
-                    inputProps={{ 'aria-label': 'search' }}
+                  <StyledAutocomplete
+                    renderInput={(params) => (
+                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                        <TextField
+                        {...params} 
+                          placeholder='Search...'
+                          variant="outlined" 
+                          size='small'
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon sx={{color: "white"}}/>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>)}
+                    options={[]}
+                    freeSolo
+                    handleHomeEndKeys
+                    onChange={async (event, value) => {
+                      if (value) {
+                          if (typeof (value) === 'string') {
+                            router.navigate(`/search/${value}`);
+                          }
+                      }
+                  }}
                   />
                 </Search>
 

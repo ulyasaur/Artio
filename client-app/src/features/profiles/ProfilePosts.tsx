@@ -8,6 +8,7 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "../../app/common/themes/theme";
 import { router } from "../../app/router/router";
 import { useStore } from "../../app/stores/store";
+import NoPosts from "../../app/common/placeholders/NoPosts";
 
 interface Props {
     posts: Post[];
@@ -17,7 +18,7 @@ interface Props {
 export default observer(function ProfilePosts({ posts, profileId }: Props) {
     const { userStore } = useStore();
     const { currentUser } = userStore;
-    
+
     return (
         <ThemeProvider theme={theme}>
             <Card sx={{
@@ -45,30 +46,32 @@ export default observer(function ProfilePosts({ posts, profileId }: Props) {
                         fontWeight: "bold"
                     }}
                 />
-                <CardContent>
-                    <Masonry columns={3} spacing={2}
-                        sx={{
-                            width: "auto",
-                            margin: "auto"
-                        }}
-                    >
-                        {posts.map((post) => (
-                            <div key={post.postId} onClick={() => router.navigate(`/post/${post.postId}`)}>
-                                <img
-                                    src={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format`}
-                                    srcSet={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format&dpr=2 2x`}
-                                    alt="post"
-                                    loading="lazy"
-                                    style={{
-                                        borderRadius: 4,
-                                        display: 'block',
-                                        width: '100%',
-                                    }}
-                                />
-                            </div>
-                        ))}
-                    </Masonry>
-                </CardContent>
+                {(posts.length === 0)
+                    ? <NoPosts />
+                    : <CardContent>
+                        <Masonry columns={3} spacing={2}
+                            sx={{
+                                width: "auto",
+                                margin: "auto"
+                            }}
+                        >
+                            {posts.map((post) => (
+                                <div key={post.postId} onClick={() => router.navigate(`/post/${post.postId}`)}>
+                                    <img
+                                        src={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format`}
+                                        srcSet={`${post.image.url ? post.image.url : placeholder}?w=162&auto=format&dpr=2 2x`}
+                                        alt="post"
+                                        loading="lazy"
+                                        style={{
+                                            borderRadius: 4,
+                                            display: 'block',
+                                            width: '100%',
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </Masonry>
+                    </CardContent>}
             </Card>
         </ThemeProvider>
     );

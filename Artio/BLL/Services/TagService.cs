@@ -83,6 +83,22 @@ namespace BLL.Services
             
         }
 
+        public async Task<List<Tag>> GetTagsBySearchAsync(string search)
+        {
+            List<Tag> tags = new List<Tag>();
+
+            try
+            {
+                tags = await this._tagRepository.GetAllTagsAsync(t => t.TagName.ToLower().StartsWith(search.ToLower()));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return tags;
+        }
+
         public async Task<List<Tag>> GetUserTagsAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))

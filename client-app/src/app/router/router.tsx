@@ -7,6 +7,7 @@ import PostForm from "../../features/posts/PostForm";
 import PostPage from "../../features/posts/PostPage";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import SettingsPage from "../../features/profiles/SettingsPage";
+import SearchPage from "../../features/search/SearchPage";
 import TagPage from "../../features/tags/TagPage";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
@@ -27,6 +28,7 @@ export const routes: RouteObject[] = [
                     { path: "post/update/:postId", element: <PostForm /> },
                     { path: ":username/followers", element: <FollowList predicate="followers" /> },
                     { path: ":username/followings", element: <FollowList predicate="followings" /> },
+                    { path: "search/:search", element: <SearchPage/>},
                     { path: "home", element: <HomePage /> }
                 ]
             },
