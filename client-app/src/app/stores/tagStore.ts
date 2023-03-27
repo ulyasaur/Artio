@@ -5,6 +5,7 @@ import { Tag } from "../models/tag";
 export default class TagStore {
     tag: Tag | null = null;
     tags: Tag[] | null = null;
+    searchedTags: Tag[] | null = null;
     loading: boolean = false;
 
     constructor() {
@@ -22,6 +23,23 @@ export default class TagStore {
 
             runInAction(() => {
                 this.tags = tags;
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            });
+        }
+    }
+
+    loadSearchedTags = async (search: string) => {
+        this.loading = true;
+        try {
+            const tags = await agent.Tags.getSearchedTags(search);
+
+            runInAction(() => {
+                this.searchedTags = tags;
                 this.loading = false;
             });
         } catch (error) {

@@ -80,6 +80,7 @@ const Profiles = {
     toggleFollow: (targetId: string) => requests.put(`/user/${targetId}`, targetId),
     getFollowers: (targetId: string) => requests.get<User[]>(`/user/${targetId}/followers`),
     getFollowings: (observerId: string) => requests.get<User[]>(`/user/${observerId}/followings`),
+    getSearchedUsers: (search: string) => requests.get<User[]>(`/user/search/${search}`),
     updateProfile: (profile: Partial<Profile>) => requests.put(`/user`, profile),
     uploadProfilePicture: (file: Blob) => {
         let formData = new FormData();
@@ -126,6 +127,7 @@ const Posts = {
 
 const Tags = {
     getAllTags: () => requests.get<Tag[]>(`/tag`),
+    getSearchedTags: (search: string) => requests.get<Tag[]>(`/tag/search/${search}`),
     getUserTags: (userId:string) => requests.get<Tag[]>(`/tag/followed/${userId}`),
     getTagById: (tagId: string) => requests.get<Tag>(`/tag/${tagId}`),
     addTag: (tagName: string) => requests.post<Tag>(`/tag`, { tagName: tagName })
