@@ -72,6 +72,27 @@ namespace Artio.Controllers
             }
         }
 
+        [HttpGet("search/{search}")]
+        public async Task<IActionResult> GetUsersBySearch(string search)
+        {
+            try
+            {
+                List<User> users = await this._userService.GetUsersBySearch(search);
+
+                List<UserViewModel> searchedUsers = new List<UserViewModel>();
+
+                this._mapper.Map(users, searchedUsers);
+
+                return Ok(searchedUsers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("id/{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {

@@ -197,6 +197,22 @@ namespace BLL.Services
             return user;
         }
 
+        public async Task<List<User>> GetUsersBySearch(string search)
+        {
+            List<User> users = new List<User>();
+            
+            try
+            {
+                users = await this._userRepository.GetAllUsersAsync(x => x.UserName.ToLower().StartsWith(search.ToLower()));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return users;
+        }
+
         public async Task<Photo> SetBackgroundPicture(string userId, IFormFile file)
         {
             if (string.IsNullOrEmpty(userId))

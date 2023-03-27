@@ -11,6 +11,8 @@ namespace BLL.Abstractions
     public interface ITagService
     {
         Task<List<Tag>> GetAllTagsAsync();
+
+        Task<List<Tag>> GetTagsBySearchAsync(string search);
         
         Task<Tag> GetTagByIdAsync(int tagId);
         
